@@ -15,7 +15,7 @@ Arguments:
 |:---------|:--------|:------------|
 | `-h`| ------------ | show help message and exit|
 | `-m METHOD, --method METHOD` | REQUIRED | Method used to carry out the solution(s), possible: `CP`, `SAT`, `SMT`|
-| `-i INPUT, --input INPUT` | `./inputs` | Files or directories where to locate the problem instaces|
+| `-i INPUT, --input INPUT` | `./instances` | Files or directories where to locate the problem instaces|
 | `-o OUTPUT, --output OUTPUT` | `{METHOD}/out` | Directory where to store the outputs |
 | `-img IMAGES, --images IMAGES` | `{METHOD}/images` |  Directory where to store the image representations of the outputs |
 | `-ni [NO_IMAGES], --no-images [NO_IMAGES]` | `False` | Prevent the generation of the image representation |

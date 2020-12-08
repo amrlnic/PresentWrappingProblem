@@ -1,10 +1,16 @@
+include "globals.mzn";
+
 % === PARAMETERS ===
 par int: WIDTH;
 par int: HEIGHT;
 par int: PRESENTS;
+par int: AREA = WIDTH * HEIGHT;
 
 array[1..PRESENTS] of par 1..WIDTH: DIMENSION_X;
 array[1..PRESENTS] of par 1..HEIGHT: DIMENSION_Y;
+
+array[1..PRESENTS] of par 1..AREA: AREAS = [ DIMENSION_X[i] * DIMENSION_Y[i] | i in 1..PRESENTS ]; 
+array[1..PRESENTS] of par 1..AREA: SORTED_AREAS_INDEXES = reverse(arg_sort(AREAS));
 
 % === VARIABLES ===
 array[1..PRESENTS] of var 1..WIDTH: COORD_X;
@@ -45,6 +51,29 @@ forall(i, j in 1..PRESENTS where j > i)(
    )
 );
 
+% First biggest present must stay in (1, 1)
+constraint COORD_X[SORTED_AREAS_INDEXES[1]] = 1;
+constraint COORD_Y[SORTED_AREAS_INDEXES[1]] = 1;
+
+% Sort presents in area orders
+% Coords of bigger presents come before then Coords of smaller one
+constraint
+  lex_lesseq(
+    [ COORD_X[SORTED_AREAS_INDEXES[i]] | i in 1..PRESENTS ],
+    COORD_X
+  );
+
+% The presents must fit the row dimension
+constraint forall(y in 1..HEIGHT)(
+  sum(i in 1..PRESENTS where COORD_Y[i] = y)
+  (DIMENSION_X[i]) = WIDTH
+);
+
+% The presents must fit the column dimension
+constraint forall(x in 1..WIDTH)(
+  sum(i in 1..PRESENTS where COORD_X[i] = x)(DIMENSION_Y[i]) == HEIGHT
+);
+  
 solve satisfy;
 
 %output [
