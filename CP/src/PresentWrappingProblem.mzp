@@ -1,0 +1,16 @@
+{
+    "openFiles": [
+        "sym_model.mzn",
+        "base_model.mzn",
+        "test.dzn"
+    ],
+    "openTab": 1,
+    "projectFiles": [
+        "base_model.mzn",
+        "solver_config.mpc",
+        "sym_model.mzn",
+        "test.dzn"
+    ],
+    "selectedSolverConfigFile": "solver_config.mpc",
+    "version": 106
+}
