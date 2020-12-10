@@ -1,14 +1,14 @@
 {
     "openFiles": [
-        "sym_model.mzn",
-        "base_model.mzn",
-        "test.dzn",
-        "heavy_test.dzn"
+        "extra_model.mzn",
+        "same_dimension_test.dzn"
     ],
     "openTab": 0,
     "projectFiles": [
         "base_model.mzn",
+        "extra_model.mzn",
         "heavy_test.dzn",
+        "same_dimension_test.dzn",
         "sym_model.mzn",
         "test.dzn"
     ],
