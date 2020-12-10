@@ -1,5 +1,6 @@
 if __name__ == '__main__':
     import os
+    import time
     import argparse
     import importlib
     from instance import read_instance_from_file, write_instance_to_file, plot_instance_to_file
@@ -52,8 +53,9 @@ if __name__ == '__main__':
     # try:
     for instance, output, image_output in zip(instances, output_files, images_files):
         print(f'Solving instance: {instance}')
+        start_time = time.time()
         resolver(instance, all_solutions=all_solutions)
-        print(f'Solutions: {len(instance.solutions)}' if instance.solutions else 'Solutions: 0')
+        print((f'Solutions: {len(instance.solutions)}' if instance.solutions else 'Solutions: 0') + f' in {time.time() - start_time:0.3f}s')
         print('Writing solutions...')
         write_instance_to_file(instance, output, all_solutions=all_solutions)
         if not args.no_images:

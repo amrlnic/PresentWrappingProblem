@@ -9,10 +9,10 @@
     "projectFiles": [
         "base_model.mzn",
         "heavy_test.dzn",
-        "solver_config.mpc",
         "sym_model.mzn",
         "test.dzn"
     ],
-    "selectedSolverConfigFile": "solver_config.mpc",
+    "selectedBuiltinConfigId": "org.chuffed.chuffed",
+    "selectedBuiltinConfigVersion": "0.10.4",
     "version": 106
 }

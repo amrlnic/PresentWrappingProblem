@@ -73,12 +73,21 @@ constraint forall(x in 1..WIDTH)(
 % The total area of the presents must fit the area of the paper
 constraint sum(i in 1..PRESENTS)(AREAS[i]) = AREA;
 
+% PUNTO 5 rotazione pezzi
+
+% PUNTO 6 stessa taglia pezzi
+%constraint forall(i in 1..PRESENTS)(
+%  lex_lesseq([ COORD_X[j] | j in 1..PRESENTS where DIMENSION_X[i] = DIMENSION_X[j] /\ DIMENSION_Y[i] = DIMENSION_Y[j] ], COORD_X) /\
+%  lex_lesseq([ COORD_Y[j] | j in 1..PRESENTS where DIMENSION_X[i] = DIMENSION_X[j] /\ DIMENSION_Y[i] = DIMENSION_Y[j] ], COORD_Y)
+%);
+constraint forall(i in 1..PRESENTS)(
+  lex_lesseq(
+    [ COORD_X[j] | j in 1..PRESENTS where DIMENSION_X[i] = DIMENSION_X[j] /\ DIMENSION_Y[i] = DIMENSION_Y[j] ],
+    [ COORD_X[j] | j in 1..PRESENTS where DIMENSION_X[i] = DIMENSION_X[j] /\ DIMENSION_Y[i] = DIMENSION_Y[j] ],
+  )
+);
 ann: coord_x_search = int_search(COORD_X, first_fail, indomain_min);
 ann: coord_y_search = int_search(COORD_Y, first_fail, indomain_min);
 ann: coords_search = seq_search([ coord_x_search, coord_y_search ]);
 
 solve :: coords_search  satisfy;
-
-%output [
-% "\(i): \(fix(COORD_X[i])), \(fix(COORD_Y[i])) - \(DIMENSION_X[i])x\(DIMENSION_Y[i])\n" | i in 1..PRESENTS
-%];

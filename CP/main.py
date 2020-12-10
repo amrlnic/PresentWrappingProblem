@@ -1,8 +1,8 @@
 def main(instance, all_solutions=True):
+    import pathlib
     import minizinc as mz
     model = mz.Model('CP/src/sym_model.mzn')
-    gecode = mz.Solver.lookup('gecode')
-
+    gecode = mz.Solver.lookup('chuffed')
     mzInstance = mz.Instance(gecode, model)
 
     mzInstance['WIDTH'], mzInstance['HEIGHT'] = instance.size
