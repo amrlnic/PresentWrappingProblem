@@ -1,10 +1,43 @@
-if __name__ == '__main__':
+def main(method, output=None, images=None, input=[], all_solutions=False, no_images=False):
     import os
     import time
-    import argparse
     import importlib
     from instance import read_instance_from_file, write_instance_to_file, plot_instance_to_file
+    methods = ('CP', 'SAT', 'SMT')
+    method = str(method or '').strip().upper()
+    if method not in methods: print(f'ERROR: The given method \'{method}\' is not supported!'), exit(1)
     
+    try: resolver = importlib.import_module(f'{method}.main').main
+    except Exception as e: print(f'ERROR: Error during the loading of the given method'), print(e), exit(1)
+
+    if output is None: output = os.path.join(method, 'out')
+    if images is None: images = os.path.join(os.path.dirname(output), 'images')
+    if not len(input): input = [ 'instances' ]
+    
+    instance_files = []
+    for path in input:
+        if not os.path.exists(path): print(f'ERROR: Input file \'{path}\' does not exists!'), exit(1)
+        elif os.path.isdir(path): instance_files += [ os.path.join(path, file) for file in os.listdir(path) ]
+        else: instance_files.append(path)
+    
+    output_files = [ os.path.join(output, os.path.basename(file).replace('.txt', '-out.txt')) for file in instance_files ]
+    images_files = [ os.path.join(images, os.path.basename(file).replace('.txt', '.png')) for file in instance_files ]
+    
+    try: instances = [ read_instance_from_file(file) for file in instance_files ]
+    except Exception as e: print(f'ERROR: Error while parsing the input files'), print(e), exit(1)
+
+    try:
+        for instance, output, image_output in zip(instances, output_files, images_files):
+            print(f'Solving instance: {instance}', end='\r')
+            start_time = time.time()
+            resolver(instance, all_solutions=all_solutions)
+            print(f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {time.time() - start_time:0.3f}s')
+            write_instance_to_file(instance, output, all_solutions=all_solutions)
+            if not no_images: plot_instance_to_file(instance, image_output, all_solutions=all_solutions)
+    except Exception as e: print(f'ERROR: Error during the execution of the given method'), print(e), exit(1)
+
+if __name__ == '__main__':
+    import argparse
 
     print('================================================================')
     print('================================================================')
@@ -25,43 +58,7 @@ if __name__ == '__main__':
     try: args = arg_parser.parse_args()
     except: arg_parser.print_help(), exit(1)
 
-    args.method = str(args.method or '').strip().upper()
-    methods = ('CP', 'SAT', 'SMT')
-    if args.method not in methods: print(f'ERROR: The given method \'{args.method}\' is not supported!'), exit(1)
-    
-    try: resolver = importlib.import_module(f'{args.method}.main').main
-    except Exception as e: print(f'ERROR: Error during the loading of the given method'), print(e), exit(1)
-
-    if args.output is None: args.output = os.path.join(args.method, 'out')
-    if args.images is None: args.images = os.path.join(os.path.dirname(args.output), 'images')
-    if not len(args.input): args.input = [ 'instances' ]
-    
-    all_solutions = args.all_solutions
-
-    instance_files = []
-    for path in args.input:
-        if not os.path.exists(path): print(f'ERROR: Input file \'{path}\' does not exists!'), exit(1)
-        elif os.path.isdir(path): instance_files += [ os.path.join(path, file) for file in os.listdir(path) ]
-        else: instance_files.append(path)
-    
-    output_files = [ os.path.join(args.output, os.path.basename(file).replace('.txt', '-out.txt')) for file in instance_files ]
-    images_files = [ os.path.join(args.images, os.path.basename(file).replace('.txt', '.png')) for file in instance_files ]
-    
-    try: instances = [ read_instance_from_file(file) for file in instance_files ]
-    except Exception as e: print(f'ERROR: Error while parsing the input files'), print(e), exit(1)
-
-    # try:
-    for instance, output, image_output in zip(instances, output_files, images_files):
-        print(f'Solving instance: {instance}')
-        start_time = time.time()
-        resolver(instance, all_solutions=all_solutions)
-        print((f'Solutions: {len(instance.solutions)}' if instance.solutions else 'Solutions: 0') + f' in {time.time() - start_time:0.3f}s')
-        print('Writing solutions...')
-        write_instance_to_file(instance, output, all_solutions=all_solutions)
-        if not args.no_images:
-            print('Generating images...')
-            plot_instance_to_file(instance, image_output, all_solutions=all_solutions)
-    # except Exception as e: print(f'ERROR: Error during the execution of the given method'), print(e), exit(1)
+    main(**vars(args))
     
      
     
