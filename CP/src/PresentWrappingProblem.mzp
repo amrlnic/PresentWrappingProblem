@@ -1,14 +1,22 @@
 {
     "openFiles": [
-        "extra_model.mzn",
-        "same_dimension_test.dzn"
+        "duple_rot_sym_model.mzn",
+        "rot_model.mzn",
+        "rot_sym_model.mzn"
     ],
-    "openTab": 0,
+    "openTab": 2,
     "projectFiles": [
         "base_model.mzn",
+        "duple_rot_sym_model.mzn",
+        "duple_sym_model.mzn",
         "extra_model.mzn",
         "heavy_test.dzn",
+        "rot_model.mzn",
+        "rot_sym_model.mzn",
+        "rotation_test.dzn",
+        "same_dimension_couple_test.dzn",
         "same_dimension_test.dzn",
+        "simple_test.dzn",
         "sym_model.mzn",
         "test.dzn"
     ],

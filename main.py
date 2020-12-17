@@ -26,15 +26,15 @@ def main(method, output=None, images=None, input=[], all_solutions=False, no_ima
     try: instances = [ read_instance_from_file(file) for file in instance_files ]
     except Exception as e: print(f'ERROR: Error while parsing the input files'), print(e), exit(1)
 
-    try:
-        for instance, output, image_output in zip(instances, output_files, images_files):
-            print(f'Solving instance: {instance}', end='\r')
-            start_time = time.time()
-            resolver(instance, all_solutions=all_solutions)
-            print(f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {time.time() - start_time:0.3f}s')
-            write_instance_to_file(instance, output, all_solutions=all_solutions)
-            if not no_images: plot_instance_to_file(instance, image_output, all_solutions=all_solutions)
-    except Exception as e: print(f'ERROR: Error during the execution of the given method'), print(e), exit(1)
+    # try:
+    for instance, output, image_output in zip(instances, output_files, images_files):
+        print(f'Solving instance: {instance}', end='\r')
+        start_time = time.time()
+        resolver(instance, all_solutions=all_solutions)
+        print(f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {time.time() - start_time:0.3f}s')
+        write_instance_to_file(instance, output, all_solutions=all_solutions)
+        if not no_images: plot_instance_to_file(instance, image_output, all_solutions=all_solutions)
+    # except Exception as e: print(f'ERROR: Error during the execution of the given method'), print(e), exit(1)
 
 if __name__ == '__main__':
     import argparse

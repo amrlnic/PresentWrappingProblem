@@ -36,10 +36,10 @@ def write_instance_to_file(instance, path, all_solutions=True):
         output = f'# SOLUTIONS: {len(instance.solutions)}\n\n'
         for s, solution in enumerate(instance.solutions):
             output += f'# SOLUTION {s + 1}:\n{instance.size[0]} {instance.size[1]}\n{len(instance)}\n'
-            for present, coords in zip(instance.presents, solution): output += f'{present[0]} {present[1]} {coords[0]} {coords[1]}\n'
+            for present, coords in zip(instance.presents, solution): output += f'{present[0]} {present[1]} {coords[0]} {coords[1]}{" (ROTATED)" if coords[2] else ""}\n'
     else:
         output = f'{instance.size[0]} {instance.size[1]}\n{len(instance)}\n'
-        for present, coords in zip(instance.presents, instance.solutions[0]): output += f'{present[0]} {present[1]} {coords[0]} {coords[1]}\n'
+        for present, coords in zip(instance.presents, instance.solutions[0]): output += f'{present[0]} {present[1]} {coords[0]} {coords[1]}{" (ROTATED)" if coords[2] else ""}\n'
     with open(path, 'w') as f: f.write(output)
 
 def plot_instance_to_file(instance, path, all_solutions=True, block_size=20, line_size=1):
@@ -64,9 +64,10 @@ def plot_instance_to_file(instance, path, all_solutions=True, block_size=20, lin
         images = []
         for solution in solutions:   
             image = np.ones(shape=(*[ x * block_size for x in instance.size ], 3), dtype=np.uint8) * 255
-            for present, coord in zip(instance.presents, solution):
-                start_x, stop_y = (coord[0] - 1) * block_size, (instance.size[1] - coord[1] + 1) * block_size
-                stop_x, start_y = start_x + present[0] * block_size, stop_y - present[1] * block_size
+            for (w, h), (x, y, r) in zip(instance.presents, solution):
+                if r: w, h = h, w
+                start_x, stop_y = (x - 1) * block_size, (instance.size[1] - y + 1) * block_size
+                stop_x, start_y = start_x + w * block_size, stop_y - h * block_size
                 image[start_y + line_size * 2:stop_y - line_size, start_x + line_size * 2:stop_x - line_size] = next(color_generator)
             for i in range(instance.size[0] * n_sols):
                 ib = i * block_size
