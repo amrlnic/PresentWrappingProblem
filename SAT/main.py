@@ -1,4 +1,4 @@
-def main(instance, all_solutions=True):
+def main(instance, all_solutions=False):
     import z3
     solver = z3.Solver()
     problem_solver = z3.parse_smt2_file('SAT/src/PresentWrappingProblem.smt')

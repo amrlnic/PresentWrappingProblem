@@ -32,7 +32,7 @@ def read_instance_from_file(path):
         else: raise Exception(f'Bad Formatted File: Too many lines @ \'{path}\'')
     return Instance(size, presents)
 
-def write_instance_to_file(instance, path, all_solutions=True):
+def write_instance_to_file(instance, path, all_solutions=False):
     if instance.solutions is None:
         output = f'### UNSATISFIABLE ###\n\n{instance.size[0]} {instance.size[1]}\n{len(instance)}\n'
         for present in instance: output += f'{present[0]} {present[1]}\n'
@@ -46,7 +46,7 @@ def write_instance_to_file(instance, path, all_solutions=True):
         for present, coords in zip(instance.presents, instance.solutions[0]): output += f'{present[0]} {present[1]} {coords[0]} {coords[1]}{" (ROTATED)" if coords[2] else ""}\n'
     with open(path, 'w') as f: f.write(output)
 
-def plot_instance(instance, all_solutions=True, block_size=20, line_size=1):
+def plot_instance(instance, all_solutions=False, block_size=20, line_size=1):
     import PIL.Image
     import numpy as np
 
@@ -84,7 +84,7 @@ def plot_instance(instance, all_solutions=True, block_size=20, line_size=1):
     
     return [ PIL.Image.fromarray(image) for image in images ]
 
-def plot_instance_to_file(instance, path, all_solutions=True, block_size=20, line_size=1):
+def plot_instance_to_file(instance, path, all_solutions=False, block_size=20, line_size=1):
     import os
 
     images = plot_instance(instance=instance, all_solutions=all_solutions, block_size=block_size, line_size=line_size)
