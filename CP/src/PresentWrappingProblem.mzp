@@ -1,24 +1,21 @@
 {
     "openFiles": [
-        "duple_rot_sym_model.mzn",
-        "rot_model.mzn",
-        "rot_sym_model.mzn"
+        "models/duple_rot_sym_model.mzn"
     ],
     "openTab": 2,
     "projectFiles": [
-        "base_model.mzn",
-        "duple_rot_sym_model.mzn",
-        "duple_sym_model.mzn",
-        "extra_model.mzn",
-        "heavy_test.dzn",
-        "rot_model.mzn",
-        "rot_sym_model.mzn",
-        "rotation_test.dzn",
-        "same_dimension_couple_test.dzn",
-        "same_dimension_test.dzn",
-        "simple_test.dzn",
-        "sym_model.mzn",
-        "test.dzn"
+        "models/base_model.mzn",
+        "models/duple_sym_model.mzn",
+        "models/duple_rot_sym_model.mzn",
+        "models/rot_model.mzn",
+        "models/rot_sym_model.mzn",
+        "models/sym_model.mzn",
+        "data/heavy_test.dzn",
+        "data/rotation_test.dzn",
+        "data/same_dimension_couple_test.dzn",
+        "data/same_dimension_test.dzn",
+        "data/simple_test.dzn",
+        "data/test.dzn"
     ],
     "selectedBuiltinConfigId": "org.chuffed.chuffed",
     "selectedBuiltinConfigVersion": "0.10.4",

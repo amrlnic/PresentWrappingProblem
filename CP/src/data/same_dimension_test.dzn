@@ -1,0 +1,5 @@
+WIDTH       = 4;
+HEIGHT      = 4;
+PRESENTS    = 4;
+DIMENSION_X = [ 2, 2, 2, 2 ];
+DIMENSION_Y = [ 2, 2, 2, 2 ];
