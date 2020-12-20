@@ -8,7 +8,11 @@ class Instance:
         if self.solutions is None: self.solutions = tuple()
         self.solutions += (tuple(solution), )
         return self
-    
+
+    def clear(self):
+        self.solutions = None
+        return self
+
     def __iter__(self): return iter(self.presents)
     def __len__(self): return len(self.presents)
     def __getitem__(self, index): return self.presents[index]
@@ -42,8 +46,7 @@ def write_instance_to_file(instance, path, all_solutions=True):
         for present, coords in zip(instance.presents, instance.solutions[0]): output += f'{present[0]} {present[1]} {coords[0]} {coords[1]}{" (ROTATED)" if coords[2] else ""}\n'
     with open(path, 'w') as f: f.write(output)
 
-def plot_instance_to_file(instance, path, all_solutions=True, block_size=20, line_size=1):
-    import os
+def plot_instance(instance, all_solutions=True, block_size=20, line_size=1):
     import PIL.Image
     import numpy as np
 
@@ -78,17 +81,23 @@ def plot_instance_to_file(instance, path, all_solutions=True, block_size=20, lin
             images.append(image)
     else:
         images = np.zeros(shape=(*[x * block_size for x in instance.size ], 3), dtype=np.uint8)
-        n_sols = 1
+    
+    return [ PIL.Image.fromarray(image) for image in images ]
 
+def plot_instance_to_file(instance, path, all_solutions=True, block_size=20, line_size=1):
+    import os
+
+    images = plot_instance(instance=instance, all_solutions=all_solutions, block_size=block_size, line_size=line_size)
+    
     if all_solutions:
         dir = str.join('.', path.split('.')[:-1])
         ext = '.' + path.split('.')[-1]
         fn = os.path.join(dir, os.path.basename(path).replace(ext, '_{solution}' + ext))
         os.makedirs(dir, exist_ok=True)
         for s, image in enumerate(images):
-            image = PIL.Image.fromarray(image)
             image.save(fn.format_map({ 'solution': s + 1 }))
     else:
-        image = PIL.Image.fromarray(images[0])
-        image.save(path.format_map({ 'solution': '' }))
+        images[0].save(path.format_map({ 'solution': '' }))
+    
+    return images
 

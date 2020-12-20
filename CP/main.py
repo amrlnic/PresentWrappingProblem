@@ -20,7 +20,7 @@ def main(instance, all_solutions=True):
     else: results = []
     for result in results:
         instance.add_solution(
-            tuple((x, y, r)  for x, y, r in zip(result.COORD_X, result.COORD_Y, result.ROTATED))
+            tuple((x, y, bool(r))  for x, y, r in zip(result.COORD_X, result.COORD_Y, result.ROTATED))
                 if hasattr(result, 'ROTATED') else
-            tuple((x, y, 0)  for x, y in zip(result.COORD_X, result.COORD_Y))
+            tuple((x, y, False)  for x, y in zip(result.COORD_X, result.COORD_Y))
         )
