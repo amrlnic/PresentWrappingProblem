@@ -1,22 +1,23 @@
 class AbstractModel:
     def __init__(self, instance):
         import z3
+        self.backend = z3
         self.instance = instance
+
         self.presents = len(instance.presents)
-        
-        self.coord_x = [ z3.Int(f'coord_x_{p}') for p in range(1, self.presents + 1) ]
-        self.coord_y = [ z3.Int(f'coord_y_{p}') for p in range(1, self.presents + 1) ]
-        self.rotated = [ z3.Bool(f'rotated_{p}') for p in range(1, self.presents + 1) ]
+        self.width, self.height = instance.size
 
         self.dimension_x = [ d for d, _ in instance.presents ]
         self.dimension_y = [ d for _, d in instance.presents ]
-        self.width, self.height = instance.size
         
         self.area = self.width * self.height
         self.areas = [ w * h for w, h in zip(self.dimension_x, self.dimension_y) ]
+        
+        self.coord_x = [ self.backend.Int(f'coord_x_{p}') for p in range(1, self.presents + 1) ]
+        self.coord_y = [ self.backend.Int(f'coord_y_{p}') for p in range(1, self.presents + 1) ]
+        self.rotated = [ self.backend.Bool(f'rotated_{p}') for p in range(1, self.presents + 1) ]
 
-        self.backend = z3
-        self.solver = z3.Solver()
+        self.solver = self.backend.Solver()
     
         # Define domains of the coordinates
         for i in range(self.presents):
@@ -31,14 +32,14 @@ class AbstractModel:
 
     def solve(self, all_solutions=False):
         if self.solver.check() == self.backend.sat:
-            model = self.solver.model()
+            solution = self.solver.model()
             self.instance.clear()
             self.instance.add_solution(
                 tuple([
                     (
-                        model.evaluate(self.coord_x[i]).as_long(),
-                        model.evaluate(self.coord_y[i]).as_long(),
-                        self.backend.is_true(model.evaluate(self.rotated[i]))
+                        solution.evaluate(self.coord_x[i]).as_long(),
+                        solution.evaluate(self.coord_y[i]).as_long(),
+                        self.backend.is_true(solution.evaluate(self.rotated[i]))
                     )
                     for i in range(self.presents)
                 ])

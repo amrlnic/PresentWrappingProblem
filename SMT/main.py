@@ -1,8 +1,8 @@
 def configuration(parser):
-    parser.add_argument('--model', default='duple_rot_sym_model', help='The model to be used in order to build the problem for the solver')
-    parser.add_argument('--smt-lib', nargs='?', default=False, const=True, help='Use the')
+    parser.add_argument('--model', default='base_model', help='The model to be used in order to build the problem for the solver')
+    parser.add_argument('--smt-lib', nargs='?', default=False, const=True, help='True=Uses the smt2-lib standard language, False=Uses python api of z3')
 
-def main(instance, all_solutions=False, smt_lib=False, model='duple_sym_rot_model'):
+def main(instance, all_solutions=False, smt_lib=False, model='base_model'):
     import z3
 
     if smt_lib:
