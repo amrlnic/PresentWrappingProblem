@@ -1,9 +1,6 @@
 from SAT.src.python.AbstractModel import AbstractModel
 
 class Model(AbstractModel):
-    def correct_dimension(self, present):
-        pass
-
     def get_constraints(self):
         constraints = []
 
@@ -36,7 +33,7 @@ class Model(AbstractModel):
                 ])
             )
         
-        # A cell of the papere must contain at least one present
+        # A cell of the paper must contain at least one present
         for x in range(self.width):
             for y in range(self.height):
                 constraints.append(self.backend.Or(*[
