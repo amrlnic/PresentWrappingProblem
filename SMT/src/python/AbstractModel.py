@@ -25,7 +25,7 @@ class AbstractModel:
                 self.get_coord_x(i) >= 1,
                 self.get_coord_x(i) <= self.width,
                 self.get_coord_y(i) >= 1,
-                self.get_coord_y(i)<= self.height
+                self.get_coord_y(i) <= self.height
             ])
         
         self.solver.add(*self.get_constraints())
