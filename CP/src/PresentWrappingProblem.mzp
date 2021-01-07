@@ -1,12 +1,12 @@
 {
     "openFiles": [
-        "models/duple_rot_sym_model.mzn"
+        "models/dup_rot_sym_model.mzn"
     ],
     "openTab": 2,
     "projectFiles": [
         "models/base_model.mzn",
-        "models/duple_sym_model.mzn",
-        "models/duple_rot_sym_model.mzn",
+        "models/dup_sym_model.mzn",
+        "models/dup_rot_sym_model.mzn",
         "models/rot_model.mzn",
         "models/rot_sym_model.mzn",
         "models/sym_model.mzn",
