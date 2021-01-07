@@ -50,7 +50,6 @@ def plot_instance(instance, all_solutions=False, block_size=20, line_size=1):
     import PIL.Image
     import numpy as np
 
-    np.random.seed(42)
     colors = { None: True }
     def random_color(): return tuple((np.random.randint(0, 33) * 8 for _ in range(3)))
     def random_color_generator():
@@ -65,7 +64,9 @@ def plot_instance(instance, all_solutions=False, block_size=20, line_size=1):
         solutions = instance.solutions if all_solutions else instance.solutions[0:1]
         n_sols = len(solutions)
         images = []
-        for solution in solutions:   
+        for solution in solutions:
+            np.random.seed(42)
+            colors = { None: True }
             image = np.ones(shape=(*[ x * block_size for x in instance.size ], 3), dtype=np.uint8) * 255
             for (w, h), (x, y, r) in zip(instance.presents, solution):
                 if r: w, h = h, w

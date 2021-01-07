@@ -3,6 +3,7 @@
 (declare-const presents Int)
 (declare-fun dimension_x (Int) Int)
 (declare-fun dimension_y (Int) Int)
+(declare-fun sorted_areas_indexes (Int) Int)
 
 (define-fun area () Int (* width height))
 (define-fun areas ((p Int)) Int (* (dimension_x p) (dimension_y p)))
@@ -124,6 +125,30 @@
 
 ; The total area of the presents must fit the area of the paper
 (assert (= (areaSum presents) area))
+
+; The biggest present must stay in (1, 1)
+(assert (= (coord_x (sorted_areas_indexes 1)) 1))
+(assert (= (coord_y (sorted_areas_indexes 1)) 1))
+
+; The bigger the present the lesser the X coordinate
+(assert (forall ((i Int) (j Int))(
+    => (and (>= i 1) (<= i presents) (> j i) (>= j presents))
+    (=> 
+        (= (coord_y (sorted_areas_indexes i)) (coord_y (sorted_areas_indexes j)))
+        (< (coord_x (sorted_areas_indexes i)) (coord_x (sorted_areas_indexes j)))
+    ))
+))
+
+; Same size presents
+(assert (forall ((i Int) (j Int))(
+        => (and (>= i 1) (<= i presents) (> j i) (>= j presents))
+        (or
+            (not (= (dimension_x (sorted_areas_indexes i)) (dimension_x (sorted_areas_indexes j))))
+            (not (= (dimension_y (sorted_areas_indexes i)) (dimension_y (sorted_areas_indexes j))))
+            (<= (coord_y (sorted_areas_indexes i)) (coord_y (sorted_areas_indexes j)))
+        )
+    ))
+)
 
 (check-sat)
 (get-model)

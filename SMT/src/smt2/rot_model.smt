@@ -15,11 +15,13 @@
   )
 )
 
+; Variables
 (declare-fun coord_x (Int) Int)
 (declare-fun coord_y (Int) Int)
 (declare-fun rotated (Int) Bool)
-; Prevent present rotation (not included in the model)
-(assert (forall ((i Int)) (not (rotated i))))
+
+(define-fun get_dimension_x ((i Int)) Int (ite (rotated i) (dimension_y i) (dimension_x i)))
+(define-fun get_dimension_y ((i Int)) Int (ite (rotated i) (dimension_x i) (dimension_y i)))
 
 (define-fun overlaps_squares (
   (l1x Int) (r1x Int) (l1y Int) (r1y Int)
@@ -33,14 +35,14 @@
 (define-fun overlaps ((p1 Int) (p2 Int)) Bool
   (overlaps_squares
     (coord_x p1)
-    (+ (coord_x p1) (dimension_x p1))
+    (+ (coord_x p1) (get_dimension_x p1))
     (coord_y p1)
-    (+ (coord_y p1) (dimension_y p1))
+    (+ (coord_y p1) (get_dimension_y p1))
     
     (coord_x p2)
-    (+ (coord_x p2) (dimension_x p2))
+    (+ (coord_x p2) (get_dimension_x p2))
     (coord_y p2)
-    (+ (coord_y p2) (dimension_y p2))
+    (+ (coord_y p2) (get_dimension_y p2))
   )
 )
 
@@ -53,8 +55,8 @@
     (>= (coord_y i) 1) (<= (coord_y i) height)
     
     ; the present must be in the paper sheet
-    (<= (+ (coord_x i) (dimension_x i)) (+ width 1))
-    (<= (+ (coord_y i) (dimension_y i)) (+ height 1))
+    (<= (+ (coord_x i) (get_dimension_x i)) (+ width 1))
+    (<= (+ (coord_y i) (get_dimension_y i)) (+ height 1))
     
     ; Two different presents must not overlap
     (forall ((j Int)) (
@@ -70,8 +72,8 @@
     0
     (+ 
       (ite
-        (and (>= y (coord_y i)) (<  y (+ (coord_y i) (dimension_y i))))
-        (dimension_x i)
+        (and (>= y (coord_y i)) (<  y (+ (coord_y i) (get_dimension_y i))))
+        (get_dimension_x i)
         0
       )
       (sumRowDim y (- i 1))
@@ -85,8 +87,8 @@
     0
     (+ 
       (ite
-        (and (>= x (coord_x i)) (<  x (+ (coord_x i) (dimension_x i))))
-        (dimension_y i)
+        (and (>= x (coord_x i)) (<  x (+ (coord_x i) (get_dimension_x i))))
+        (get_dimension_y i)
         0
       )
       (sumColDim x (- i 1))
