@@ -31,11 +31,28 @@ class AbstractModel:
         self.solver.add(*self.get_constraints())
 
     def solve(self, all_solutions=False):
-        if self.solver.check() == self.backend.sat:
-            solution = self.solver.model()
-            solution = { str(k): self.backend.is_true(solution[k]) for k in solution }
-            self.instance.clear()
-            self.instance.add_solution(tuple([ self.find_present_coordinates(solution, p) for p in range(1, self.presents + 1) ]))
+        self.instance.clear()
+        while True:
+            if self.solver.check() == self.backend.sat:
+                solution = self.solver.model()
+                solution = { str(k): self.backend.is_true(solution[k]) for k in solution }
+                solved = tuple([ self.find_present_coordinates(solution, p) for p in range(1, self.presents + 1) ])
+                self.instance.add_solution(solved)
+                self.solver.add(
+                    self.backend.Not(
+                        self.backend.And(
+                            *([
+                                self.paper[x][y][p] == solution[f'paper_{x + 1}_{y + 1}_{p + 1}']
+                                for x in range(self.width)
+                                for y in range(self.height)
+                                for p in range(self.presents)
+                            ]  +
+                            ([ self.rotated[p] == solution[f'rotated_{p + 1}'] for p in range(self.presents) ] if 'rotated_1' in solution else []))
+                        )
+                    )
+                )
+            else: break
+            if not all_solutions: break
 
     def find_present_coordinates(self, solution, present):
         for x in range(1, self.width + 1):

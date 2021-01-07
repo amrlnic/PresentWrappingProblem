@@ -31,20 +31,32 @@ class AbstractModel:
         self.solver.add(*self.get_constraints())
 
     def solve(self, all_solutions=False):
-        if self.solver.check() == self.backend.sat:
-            solution = self.solver.model()
-            self.instance.clear()
-            self.instance.add_solution(
-                tuple([
-                    (
-                        solution.evaluate(self.coord_x[i]).as_long(),
-                        solution.evaluate(self.coord_y[i]).as_long(),
-                        self.backend.is_true(solution.evaluate(self.rotated[i]))
+        self.instance.clear()
+        while True:
+            if self.solver.check() == self.backend.sat:
+                solution = self.solver.model()
+                solution = tuple([
+                        (
+                            solution.evaluate(self.coord_x[i]).as_long(),
+                            solution.evaluate(self.coord_y[i]).as_long(),
+                            self.backend.is_true(solution.evaluate(self.rotated[i]))
+                        )
+                        for i in range(self.presents)
+                    ])
+                self.instance.add_solution(solution)
+                self.solver.add(
+                    self.backend.Not(
+                        self.backend.And(*[
+                            self.backend.And(
+                                self.coord_x[i] == solution[i][0],
+                                self.coord_y[i] == solution[i][1],
+                                self.rotated[i] == solution[i][2]
+                            ) for i in range(self.presents)
+                        ])
                     )
-                    for i in range(self.presents)
-                ])
-            )
-
+                )
+            else: break
+            if not all_solutions: break
 
     def get_coord_x(self, index):
         return self.coord_x[index]
