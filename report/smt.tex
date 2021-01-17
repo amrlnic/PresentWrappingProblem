@@ -1,12 +1,222 @@
 \chapter{SMT}
 
+In this chapter we are going to cover the solution of the Present Wrapping Problem using Satisfiability Modulo Theories (SMT) with the help of tools such as Z3 python API \cite{z3} and SMT2LIB \cite{smt2lib} standard language.
+\\
+To better explore the problem and all the possible solutions we decided to create a model for each approach so as to be able to understand the effects more easily and only at the end incorporate everything that was learned in the intermediate stages.
+
 \section{Base Model}
+
+The baseline model is the simplest model we have implemented and also includes all the parameters, variables and constraints on which all subsequent models are based.
+\\
+The parameters and variables used are the same as those already defined:
+
+\begin{center}
+	\begin{adjustwidth}{-1.5cm}{}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			\multicolumn{3}{|c|}{\textbf{Parameters}} \\
+			\hline
+			\textbf{Parameter} & \multicolumn{2}{|c|}{\textbf{Description}} \\
+			\hline
+			Width & \multicolumn{2}{|c|}{The Paper Sheet Width} \\
+			\hline
+			Height & \multicolumn{2}{|c|}{The Paper Sheet Height} \\
+			\hline
+			Presents & \multicolumn{2}{|c|}{The number of the Presents to place in the Paper Sheet} \\
+			\hline
+			Dimension X & \multicolumn{2}{|c|}{The array of the x dimensions of the Presents} \\
+			\hline
+			Dimension Y & \multicolumn{2}{|c|}{The array of the y dimensions of the Presents} \\
+			\hline
+			\multicolumn{3}{|c|}{\textbf{Extracted Parameters}} \\
+			\hline
+			\textbf{Parameter} & \textbf{Formula} & \textbf{Description} \\
+			\hline
+			Area & $Area = Width \cdot Height$ & Area of the Paper \\
+			\hline
+			Areas & $Areas[i] = Dimension_x[i] \cdot Dimension_y[i]$ & The array of the areas of the Presents \\
+			\hline
+			\multicolumn{3}{|c|}{\textbf{Variables}} \\
+			\hline
+			\textbf{Variable} & \multicolumn{2}{|c|}{\textbf{Description}} \\
+			\hline
+			Coord X &  \multicolumn{2}{|c|}{Array of the X positions of each Present} \\
+			\hline
+			Coord Y &  \multicolumn{2}{|c|}{Array of the Y positions of each Present} \\
+			\hline
+		\end{tabular}
+	\end{adjustwidth}
+\end{center}
+
 \subsection{Main Problem Constraints}
 
+We need to define constraints that are able to give valid instructions to the solver so that we can return a valid solution to the problem we are facing.
+
+\begin{itemize}
+	\item[] \textbf{Essential Constraints}
+	\\
+	First of all we need to define the constraints that allow us to have only valid solutions as output: that is, all those constraints that define the problem treated together with the parameters and variables previously discussed.
+	\\
+	The following is a list of these required constraints:
+	\item \textbf{\textit{The presents must fit into the Paper Sheet:}}
+	\begin{itemize}
+		\item[] Obviously a present has a certain size (both in width and in height) which must be a positive number and which must not exceed the size of the paper in which it is to be placed.
+		\item[] The resultant constraint is:
+		\item[] $\forall i \in [1, Presents] \rightarrow\\(Coord_x[i] + Dimension_x[i] \leq Width + 1) \wedge \\ (Coord_y[i] + Dimension_y[i] \leq Height + 1)$  
+		\item[] \textit{As we used indexes starting from 1, we must add 1 to the right side of both disequations} 
+	\end{itemize}
+	
+	\item \textbf{\textit{Two different presents must not overlap:}}
+	\begin{itemize}
+		\item[] 
+		The other essential constraint is about the not overlap principle.
+		\\
+		Through the \texttt{overlaps} function defined by us we can pass as parameters the indices of the two distinct presents of which we want to know if they overlap each other or not.
+		\\\\
+		Knowing the two rectangles taken into consideration we can easily understand if these two overlap at least in one point by comparing the spatial coordinates of the horizontal and vertical boundaries of the two.
+		\\
+		Here how we defined the \textit{overlaps} constraint in a mathematical way:
+
+		\item[] $overlaps(
+		Left^1_x, Right^1_x, Left^1_y, Right^1_y,
+		Left^2_x, Right^2_x, Left^2_y, Right^2_y
+		) \leftrightarrow
+		\neg (Left^1_x \geq Right^2_x \vee Left^2_x \geq Right^1_x) \wedge\\
+		\neg (Right^1_y \leq Left^2_y \vee Right^2_y \leq Left^1_y)$
+		\item[] Where $Left^i_x, Left^i_y, Right^i_x, Right^i_y$ are the present spacial coordinate.
+		\item[] By means of this we can check in pairs if the ragals do not overlap each other:
+		\item[] $
+		\forall i, j \in [1, Presents], j > i \rightarrow\\
+		\neg overlaps(\\
+		Coord_x[i], Coord_x[i] + Dimension_x[i], Coord_y[i], Coord_y[i] + Dimension_y[i],\\
+		Coord_x[j], Coord_x[j] + Dimension_x[j], Coord_y[j], Coord_y[j] + Dimension_y[j]\\
+		)$ 
+	\end{itemize}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{overlaps}
+		\caption{Overlapping Model}
+		\label{fig:overlaps}
+	\end{figure}
+	
+	\item[] \textbf{Additional Constraints}
+	\item[] In addition to the previous constraints, which are inevitable for the correct definition of the problem, we have decided to implement further constraints to restrict the domain of possible solutions and make the solver more efficient.
+	\item \textbf{\textit{The total area of the presents must be the same of the Paper Sheet:}}
+	\begin{itemize}
+		\item[] $\sum_{i = 1}^{Presents}{Areas[i]} = Area$
+		\item[] Thanks to this constraint we can understand from the beginning of the search if the given instance is feasible or not: in this way we can avoid the search a priori and avoid a waste of resources in case of unfeasibility.	
+		\item[] A further relaxation of this constraint is to use $\leq$ instead of $=$ in order 
+		to keep instances where we have presents that do not completely fill the Paper Sheet. 
+	\end{itemize}
+	\item \textbf{\textit{The presents must fill the row (column) dimension:}}
+	\begin{itemize}
+		\item[] A further step to optimize our solver was to add a constraint where it is checked whether each row \textit{(column)} is filled completely along its width \textit{(height)}.
+		\item[] Here follow the two different definitions of this constraint:
+		\item[] Rows: $
+		\forall y \in [1, Height] \rightarrow\\ \sum_{i = 1}^{Presents}{
+			\begin{cases}
+				Dimension_x[i] & \text{if } y \geq Coord_y[i] \wedge y < Coord_y[i] + Dimension_y[i] \\
+				0 & \text{otherwise}
+			\end{cases}
+		}\\= Width$
+		\item[] Columns: $
+		\forall x \in [1, Width] \rightarrow\\ \sum_{i = 1}^{Presents}{
+			\begin{cases}
+				Dimension_y[i] & \text{if } x \geq Coord_x[i] \wedge x < Coord_x[i] + Dimension_x[i] \\
+				0 & \text{otherwise}
+			\end{cases}
+		}\\= Height$
+	\end{itemize}
+\end{itemize}
+
 \section{Symmmetry Model}
+As has already been done for the implementation in CP, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant. \\
+As in the analogous model for CP, here too we have extracted the \textit{"Sorted Area Indexes"} parameter, which is essential to implement the heuristics just described:
+
+\begin{center}
+	\begin{adjustwidth}{-1.5cm}{}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			\multicolumn{3}{|c|}{\textbf{Extracted Parameters}} \\
+			\hline
+			\textbf{Parameter} & \textbf{Formula} & \textbf{Description} \\
+			\hline
+			Sorted Areas Indexes & \makecell{$Sorted\_Areas\_Indexes =$ \\ $reverse(arg\_sort(Areas))$} & Indexes of the Areas sorted by Present Area \\
+			\hline
+		\end{tabular}
+	\end{adjustwidth}
+\end{center}
+
+In the \textit{"Sorted Area Indexes"} parameter, as can be seen from the name, is a list with the indices of the gifts arranged in ascending order with respect to the area.
+In this way we can easily define that the first object of the list should be placed first in the lower-left corner of our paper in a hard-coded way::\\ \\
+$
+Coord\_X[Sorted\_Areas\_Indexes[1]] = 1\\
+Coord\_Y[Sorted\_Areas\_Indexes[1]] = 1
+$
+\\ \\
+In the same way we can go have all of the following presents in the list in order to respect the rule "the biggest first":\\ \\
+$
+\forall i, j \in [1, Presents], j > i \rightarrow \\
+Coord_y[Sorted\_Areas_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
+Coord_x[Sorted\_Areas_Indexes[i]] < Coord_x[Sorted\_Areas\_Indexes[j]]
+$
+\\
+
+% TODO: Example Image
+
 \section{Rotation Model}
+In order to expand our model so that it is possible to rotate a block, thus having further solutions to explore in our problem, we needed to add a new \textit{"rotated"} variable:
+\begin{center}
+		\begin{tabular}{|c|c|}
+			\hline
+			\multicolumn{2}{|c|}{\textbf{Variables}} \\
+			\hline
+			\textbf{Variable} & {\textbf{Description}} \\
+			\hline
+			Rotated X & The boolean that indicates whether a present is rotated or not \\
+			\hline
+		\end{tabular}
+\end{center}
+If \textit{"rotated"} were set to True, the dimensions X and Y would be swapped to represent the present rotated by 90 ° (or 270 °). In the False case, the dimensions remain unchanged and represent the object not rotated (or rotated by 180 °). \\
+All this is easily implemented with a boolean check when returning the dimensions of a single present.
+Here follows the definition written in pseo-code of what just described:
+\begin{algorithm}
+	\caption{Retrieve the dimensions of a present}\label{euclid}
+	\begin{algorithmic}[1]
+		\Procedure{Retrieve Dimension X}{}
+		\If {index is \textit{rotated}} \Return \textit{Dimension Y}
+		\Else {} \Return \textit{Dimension X}
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+	\begin{algorithmic}[1]
+		\Procedure{Retrieve Dimension Y}{}
+		\If {index is \textit{rotated}} \Return \textit{Dimension X}
+		\Else {} \Return \textit{Dimension Y}
+		\EndIf
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
 \section{Symmetry Rotation Model}
+Following as done in CP, also in SMT we decided to combine the characteristics of the previously implemented models.\\
+We merge together the \textbf{Symmetry Model} with the \textbf{Rotation Model} and we made
+the \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
+solutions.
+
 \section{Duplicated Symmetry Model}
+Another point to take in account, is the possibility of the presence of presents that have the same size. As we modelled the problem,
+the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints in order to exploit the Symmetry Breaking
+even in these cases.
+
+% TODO
 \section{Duplicated Symmetry Rotation Model}
 
+This model simply incorporates all the features implemented in the previous models \textit{(Symmetry, Rotation, Duplicated Presents)}.
+\\
+In this way it is possible to benefit at the same time from features, such as rotation and the distinction between two different gifts of the same size, and from symmetry breaking to remove rotated and mirrored solutions from the domain.  
+
 \section{Remarks}
+
+Here are the results obtained from the various SMT models described in this chapter:
