@@ -5,9 +5,11 @@
     "openTab": 2,
     "projectFiles": [
         "models/base_model.mzn",
+        "models/base_global_model.mzn",
         "models/dup_sym_model.mzn",
         "models/dup_rot_sym_model.mzn",
         "models/rot_model.mzn",
+        "models/rot_global_model.mzn",
         "models/rot_sym_model.mzn",
         "models/sym_model.mzn",
         "data/heavy_test.dzn",

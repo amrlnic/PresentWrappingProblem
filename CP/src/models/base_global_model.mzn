@@ -1,3 +1,5 @@
+include "globals.mzn";
+
 % === PARAMETERS ===
 par int: WIDTH;
 par int: HEIGHT;
@@ -13,19 +15,6 @@ array[1..PRESENTS] of var 1..WIDTH: COORD_X;
 array[1..PRESENTS] of var 1..HEIGHT: COORD_Y;
 
 % === PREDICATES ===
-% Check if two squares overlap
-predicate overlaps(
-  % square 1
-  var int: l1x, var int: r1x,
-  var int: l1y, var int: r1y,
-  % square 2
-  var int: l2x, var int: r2x,
-  var int: l2y, var int: r2y
-) = (
-  not (l1x >= r2x \/ l2x >= r1x) /\
-  not (r1y <= l2y \/ r2y <= l1y)
-);
-
 % === CONSTRAINTS ===
 % The present must be in the paper sheet
 constraint
@@ -34,29 +23,11 @@ forall(i in 1..PRESENTS)(
    COORD_Y[i] + DIMENSION_Y[i] <= HEIGHT + 1
 );
 
-% Two different presents must not overlap
-constraint
-forall(i, j in 1..PRESENTS where j > i)(
-  not overlaps(
-      % present 1
-      COORD_X[i], COORD_X[i] + DIMENSION_X[i],
-      COORD_Y[i], COORD_Y[i] + DIMENSION_Y[i],
-      % present 2
-      COORD_X[j], COORD_X[j] + DIMENSION_X[j],
-      COORD_Y[j], COORD_Y[j] + DIMENSION_Y[j]
-   )
-);
+constraint diffn(COORD_X, COORD_Y, DIMENSION_X, DIMENSION_Y);
 
-% The presents must fit the row dimension
-constraint forall(y in 1..HEIGHT)(
-  sum(i in 1..PRESENTS where y >= COORD_Y[i] /\ y < COORD_Y[i] + DIMENSION_Y[i])(DIMENSION_X[i]) = WIDTH
-);
-
-
-% The presents must fit the column dimension
-constraint forall(x in 1..WIDTH)(
-  sum(i in 1..PRESENTS where x >= COORD_X[i] /\ x < COORD_X[i] + DIMENSION_X[i])(DIMENSION_Y[i]) = HEIGHT
-);
+% The cumulative global constraint is very slow compared with the custom solution (see base_model.mzn)
+constraint cumulative(COORD_X, DIMENSION_X, DIMENSION_Y, HEIGHT);
+constraint cumulative(COORD_Y, DIMENSION_Y, DIMENSION_X, WIDTH);
 
 % The total area of the presents must fit the area of the paper
 constraint sum(i in 1..PRESENTS)(AREAS[i]) = AREA;
