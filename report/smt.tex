@@ -107,7 +107,9 @@ We need to define constraints that are able to give valid instructions to the so
 		\item[] $\sum_{i = 1}^{Presents}{Areas[i]} = Area$
 		\item[] Thanks to this constraint we can understand from the beginning of the search if the given instance is feasible or not: in this way we can avoid the search a priori and avoid a waste of resources in case of unfeasibility.	
 		\item[] A further relaxation of this constraint is to use $\leq$ instead of $=$ in order 
-		to keep instances where we have presents that do not completely fill the Paper Sheet. 
+		to keep instances where we have presents that do not completely fill the Paper Sheet.  
+		We kept the strict constraint for efficency reason, because the given instances all fall
+		in this case.
 	\end{itemize}
 	\item \textbf{\textit{The presents must fill the row (column) dimension:}}
 	\begin{itemize}
@@ -132,7 +134,7 @@ We need to define constraints that are able to give valid instructions to the so
 
 \section{Symmmetry Model}
 As has already been done for the implementation in CP, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant. \\
-As in the analogous model for CP, here too we have extracted the \textit{"Sorted Area Indexes"} parameter, which is essential to implement the heuristics just described:
+As in the analogous model for CP, here too we have extracted the \textit{``Sorted Area Indexes"} parameter, which is essential to implement the heuristics just described:
 
 \begin{center}
 	\begin{adjustwidth}{-1.5cm}{}
@@ -148,14 +150,14 @@ As in the analogous model for CP, here too we have extracted the \textit{"Sorted
 	\end{adjustwidth}
 \end{center}
 
-In the \textit{"Sorted Area Indexes"} parameter, as can be seen from the name, is a list with the indices of the gifts arranged in ascending order with respect to the area.
-In this way we can easily define that the first object of the list should be placed first in the lower-left corner of our paper in a hard-coded way::\\ \\
+In the \textit{``Sorted Area Indexes"} parameter, as can be seen from the name, is a list with the indices of the gifts arranged in ascending order with respect to the area.
+In this way we can easily define that the first object of the list should be placed first in the lower-left corner of our paper in a hard-coded way:\\ \\
 $
 Coord\_X[Sorted\_Areas\_Indexes[1]] = 1\\
 Coord\_Y[Sorted\_Areas\_Indexes[1]] = 1
 $
 \\ \\
-In the same way we can go have all of the following presents in the list in order to respect the rule "the biggest first":\\ \\
+In the same way we can go have all of the following presents in the list in order to respect the rule ``the biggest first":\\ \\
 $
 \forall i, j \in [1, Presents], j > i \rightarrow \\
 Coord_y[Sorted\_Areas_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
@@ -166,7 +168,7 @@ $
 % TODO: Example Image
 
 \section{Rotation Model}
-In order to expand our model so that it is possible to rotate a block, thus having further solutions to explore in our problem, we needed to add a new \textit{"rotated"} variable:
+In order to expand our model so that it is possible to rotate a block, thus having further solutions to explore in our problem, we needed to add a new \textit{``rotated"} variable:
 \begin{center}
 		\begin{tabular}{|c|c|}
 			\hline
@@ -174,30 +176,45 @@ In order to expand our model so that it is possible to rotate a block, thus havi
 			\hline
 			\textbf{Variable} & {\textbf{Description}} \\
 			\hline
-			Rotated X & The boolean that indicates whether a present is rotated or not \\
+			Rotated & The boolean array that indicates whether a present is rotated or not \\
 			\hline
 		\end{tabular}
 \end{center}
-If \textit{"rotated"} were set to True, the dimensions X and Y would be swapped to represent the present rotated by 90 ° (or 270 °). In the False case, the dimensions remain unchanged and represent the object not rotated (or rotated by 180 °). \\
+If \textit{``rotated"} were set to True, the dimensions X and Y would be swapped to represent the present rotated by 90 ° (or 270 °). In the False case, the dimensions remain unchanged and represent the object not rotated (or rotated by 180 °). \\
 All this is easily implemented with a boolean check when returning the dimensions of a single present.
-Here follows the definition written in pseo-code of what just described:
-\begin{algorithm}
-	\caption{Retrieve the dimensions of a present}\label{euclid}
-	\begin{algorithmic}[1]
-		\Procedure{Retrieve Dimension X}{}
-		\If {index is \textit{rotated}} \Return \textit{Dimension Y}
-		\Else {} \Return \textit{Dimension X}
-		\EndIf
-		\EndProcedure
-	\end{algorithmic}
-	\begin{algorithmic}[1]
-		\Procedure{Retrieve Dimension Y}{}
-		\If {index is \textit{rotated}} \Return \textit{Dimension X}
-		\Else {} \Return \textit{Dimension Y}
-		\EndIf
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+Here follows the definition of what just described:\\
+$
+Get\_Dimension_x = 
+\begin{cases}
+	Dimension_y & \text{if } Rotated \\
+	Dimension_x & \text{otherwise}
+\end{cases}
+$
+\\
+$
+Get\_Dimension_y = 
+\begin{cases}
+	Dimension_x & \text{if } Rotated \\
+	Dimension_y & \text{otherwise}
+\end{cases}
+$
+% \begin{algorithm}
+% 	\caption{Retrieve the dimensions of a present}\label{euclid}
+% 	\begin{algorithmic}[1]
+% 		\Procedure{Retrieve Dimension X}{}
+% 		\If {index is \textit{rotated}} \Return \textit{Dimension Y}
+% 		\Else {} \Return \textit{Dimension X}
+% 		\EndIf
+% 		\EndProcedure
+% 	\end{algorithmic}
+% 	\begin{algorithmic}[1]
+% 		\Procedure{Retrieve Dimension Y}{}
+% 		\If {index is \textit{rotated}} \Return \textit{Dimension X}
+% 		\Else {} \Return \textit{Dimension Y}
+% 		\EndIf
+% 		\EndProcedure
+% 	\end{algorithmic}
+% \end{algorithm}
 
 \section{Symmetry Rotation Model}
 Following as done in CP, also in SMT we decided to combine the characteristics of the previously implemented models.\\

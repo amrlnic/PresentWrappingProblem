@@ -107,6 +107,8 @@ in order to instruct the way to find a solution to the solver. The constraints a
                 feasible: if the total areas does not match we can say the problem is unsatisfiable.
             \item[] A further relaxation of this constraint is to use $\leq$ instead of $=$ in order 
                 to keep instances where we have presents that do not completely fill the Paper Sheet. 
+                We kept the strict constraint for efficency reason, because the given instances all fall
+                in this case.
         \end{itemize}
     \item \textbf{\textit{The presents must fill the row (column) dimension:}}
         \begin{itemize}
@@ -139,8 +141,8 @@ To lower the elasped time, we can tell to the solver how to optimize the search 
     \item We decided to choose a preferential axes for the search. The X axis was choosen.
     \item Each axis then can be explored in different ways. We want to explore it with the most difficult case
         as we already know that some presents configurations can exclude a priori the placement of other presents.
-        In this way we selected the \textit{\textbf{first\_fail}} search parameter, that chooses the most constrained
-        unassigned variable and try to find out if can have a value in the current solution state.
+        In this way we selected the \textit{\textbf{first\_fail}} search parameter, that chooses the variable with
+        the smallest domain and try to find out if can have a value in the current solution state.
         If there are no possible values, we prevented the solver to search useless branch of the search tree.
         As we place presents into the sheet, each variable will lose a part of its domain, so we will choose that
         one that is most likely to fail.
@@ -154,6 +156,9 @@ To lower the elasped time, we can tell to the solver how to optimize the search 
             \text{\ \ \ \ }int\_search(Coord\_Y, first\_fail, indomain\_min)\\
         ])$
 \end{itemize} 
+
+We also tried any combination of all the possible parameters in order to confirm our reasoning, so we end up by choosing
+this setup because it resulted the most performant.
 
 \section{Symmmetry Model}
 We had further analysed the problem in order to understand if, from an erroneous solution,
@@ -197,11 +202,12 @@ $
     Coord_y[Sorted\_Areas_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
     Coord_x[Sorted\_Areas_Indexes[i]] < Coord_x[Sorted\_Areas\_Indexes[j]]
 $
+\\
 This, in combination with the search method, provides that the bigger present will be then the lesser will be its coordinate x,
 and since the bigger the present, the smaller is its domain, it will be also placed first, that means in the lower y possible.
 By doing this we can exclude all the possible symmetries due to the swap of different area presents.\\
 Excluding the symmetrical solutions allow us to exclude also the symmetrical part of the search tree that are unsatisfiable, just
-by finding an unsatisfiable solution out of the all simmetricals.
+by finding an unsatisfiable combination out of the all simmetricals.
 
 % TODO: Example Image
 
