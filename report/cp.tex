@@ -160,6 +160,17 @@ To lower the elasped time, we can tell to the solver how to optimize the search 
 We also tried any combination of all the possible parameters in order to confirm our reasoning, so we end up by choosing
 this setup because it resulted the most performant.
 
+\subsection{Results}
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
+
 \section{Symmmetry Model}
 We had further analysed the problem in order to understand if, from an erroneous solution,
 there are similar solutions that we can deduce as unsatisfiable as they are permutation or simmetrical of the
@@ -211,20 +222,143 @@ by finding an unsatisfiable combination out of the all simmetricals.
 
 % TODO: Example Image
 
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
 \section{Rotation Model}
-% TODO
+In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
+The rotation model can overwhelm this problem because it looks for any combination of rotated presents over the paper sheet, so we don't need to specify the right combination
+of dimensions that can fit the paper. In order to do this, we need another variable in our description:
+
+\begin{center}
+		\begin{tabular}{|c|c|}
+			\hline
+			\multicolumn{2}{|c|}{\textbf{Variables}} \\
+			\hline
+			\textbf{Variable} & {\textbf{Description}} \\
+			\hline
+			Rotated & The boolean array that indicates whether a present is rotated or not \\
+			\hline
+		\end{tabular}
+\end{center}
+
+This variable keep trace of the rotation of the present. Keep in mind that in a discretized space, we can rotate a rectangular present just in two direction: $0\deg$ or $90\deg$.
+Indeed if we further rotate the present, $180\deg$ for example, we end up with the non rotated present, or even more at $270\deg$ we obtain the $90\deg$ rotated present.
+Thanks to their regularity of the geometric shape of the presents there are only two conditions of rotation, described by the inversion of the two dimensions.
+To keep the problem description as simple as possible, we can just create a proxy function that returns the correct dimension depending on its rotation.
+So if the present is not rotated, it return the right dimension, otherwise it will return the opposite dimension:\\
+$
+Get\_Dimension_x = 
+\begin{cases}
+	Dimension_y & \text{if } Rotated \\
+	Dimension_x & \text{otherwise}
+\end{cases}
+$
+\\
+$
+Get\_Dimension_y = 
+\begin{cases}
+	Dimension_x & \text{if } Rotated \\
+	Dimension_y & \text{otherwise}
+\end{cases}
+$
+
+Now, we can change any constraint that involves a dimension variable with the corresponding proxy.
+In this way we obtained a model that can solve instances of the problem that are satisfiable only if we rotate one \textit{(or more)} present.
+
+\begin{center}
+    \begin{tabular}{|c|r|r|r|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+        8x8 & 0.001 & 9 & 658 \\ \hline
+        9x9 & 0.002 & 10 & 1210 \\ \hline
+        10x10 & 0.002 & 12 & 1528 \\ \hline
+        11x11 & 0.004 & 36 & 6827 \\ \hline
+        12x12 & 0.003 & 27 & 4698 \\ \hline
+        13x13 & 0.003 & 31 & 5859 \\ \hline
+        14x14 & 0.016 & 43 & 8206 \\ \hline
+        15x15 & 0.008 & 37 & 11236 \\ \hline
+        16x16 & 0.004 & 23 & 6360 \\ \hline
+        17x17 & 0.007 & 34 & 10908 \\ \hline
+        18x18 & 4.728 & 12027 & 6548570 \\ \hline
+        19x19 & 0.126 & 304 & 107100 \\ \hline
+        20x20 & 0.073 & 297 & 116408 \\ \hline
+        21x21 & 0.073 & 257 & 90569 \\ \hline
+        22x22 & 0.027 & 68 & 55549 \\ \hline
+        23x23 & 16.056 & 24043 & 18445778 \\ \hline
+        24x24 & 0.778 & 1483 & 1109728 \\ \hline
+        25x25 & 0.336 & 819 & 591748 \\ \hline
+        26x26 & 1.123 & 2534 & 1470455 \\ \hline
+        27x27 & 5.310 & 6470 & 8463102 \\ \hline
+        28x28 & 3.132 & 4165 & 4817887 \\ \hline
+        29x29 & 3.082 & 3683 & 4938340 \\ \hline
+        30x30 & 0.275 & 611 & 514051 \\ \hline
+        31x31 & 1.453 & 2362 & 2419560 \\ \hline
+        32x32 & 14.042 & 13639 & 25412055 \\ \hline
+        33x33 & 0.320 & 531 & 373851 \\ \hline
+        34x34 & 5.510 & 6336 & 9279861 \\ \hline
+        35x35 & 2.962 & 4036 & 5119177 \\ \hline
+        36x36 & 27.857 & 23856 & 44708965 \\ \hline
+        37x37 & 4.729 & 7786 & 5724185 \\ \hline
+        38x38 & 0.447 & 848 & 1045461 \\ \hline
+        39x39 & 1062.707 & 613863 & 1235535096 \\ \hline
+        40x40 & 10.516 & 10687 & 14672008 \\ \hline
+        rotation_test & 0.000 & 8 & 422 \\ \hline
+    \end{tabular}
+\end{center}
 
 \section{Symmetry Rotation Model}
 As we growth the model in modules, we can just combine the \textbf{Symmetry Model} with the \textbf{Rotation Model} and we end up
 with a \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
 solutions.
 
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
+
 \section{Duplicated Symmetry Model}
 Another point to take in account, is the possibility of the presence of presents that have the same size. As we modelled the problem,
-the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints in order to exploit the Symmetry Breaking
-even in these cases.
+the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints in order to exploit the \textbf{Symmetry Breaking}
+even in these cases. The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
+coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:\\
 
-% TODO
+$
+\forall i, j \in [1, Presents], j > i \rightarrow \\
+    Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \wedge \\
+    Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \wedge \\
+    Coord_y[Sorted\_Areas\_Indexes[i]] \leq Coord_y[Sorted\_Areas\_Indexes[j]]
+$
+
+In this formula we are exploiting the search method, indeed we do not need to constrain the X coordinates because the \textbf{first\_fail}
+approach do it for us. Furthermore, we decided to use the already sorted areas array for efficiency reasons, because the same size
+presents will appear in near positions in that array, while they could appear in distant positions in the non-sorted one. 
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
 
 \section{Duplicated Symmetry Rotation Model}
 The modularity of our model eassily achieves a new model that takes in account all the discussed properties of the problem
@@ -232,6 +366,61 @@ The modularity of our model eassily achieves a new model that takes in account a
 The results show that this model achieve the best performance, as the number of errors and the quantity of the explorated nodes in the
 search tree drastically decrease.  
 
-\section{Remarks}
-% TODO
-% TODO: Geocode and Chuffed diffrences
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\section{Global Constraints Model}
+For the study case, we choose to try to implement our constraints through the already defined MiniZinc global constraints:
+
+\begin{itemize}
+    \item The \texttt{overlaps} predicate can well be substituted by the \texttt{diffn} global constraint.
+            Furthermore, the latter can work directly on arrays so the new constraint will be just one line of code:
+    \item[] $diffn(Coord_x, Coord_y, Dimension_x, Dimension_y)$
+    \item The \textit{fit row/col} constriants can be substituted by the \texttt{cumulative} global constraint:
+    \item[] Rows: $cumulative(Coord_x, Dimension_x, Dimension_y, Height)$
+    \item[] Cols: $cumulative(Coord_y, Dimension_y, Dimension_x, Width)$
+    \item[] Unluckly this global constraint was thought for task scheduling problems, so the performance result are not so good at all.
+    \item The Duplicated \textbf{Symmetry Breaking} constraint can also be replaced by the \texttt{lexlesseq} global constraint:
+    \item[] $lexlesseq(Sorted\_Areas\_Coord_y, Coord_y)$
+    \item[] With $Sorted\_Areas\_Coord_y$ is the array of $Coord_y$ accessed with the indexes of the $Sorted\_Areas\_Indexes$ array.   
+\end{itemize}
+
+At the end, we choosed to stuck with our implementation because it was well optimized for this kind of problem, and results to be more
+efficient in terms of time, during the resolution of big size problems.
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\section{Remarks and Results}
+As MiniZinc is an high level interface for many solver, we tryied different solver configurations in order to understand which one performs better
+in our problem. The standard \texttt{Geocode} solver resulted well suitable for any given instance, but we found out that the best solver, in particular
+for the bigger instances, was the \texttt{Chuffed} solver. The latter indeede exploit some \textbf{SAT} techniques to better explore and learn wrong or symmetric
+pattern in the search space in order to prevent the exploration of useles nodes and branches.\\
+
+We briefly recap the overall results of the previous models in a textual informative table:
+
+\begin{center}
+    \begin{adjustwidth}{-1.5cm}{}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
+            \hline
+            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
+            \hline
+        \end{tabular}
+    \end{adjustwidth}
+\end{center}

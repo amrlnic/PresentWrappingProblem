@@ -1,8 +1,164 @@
 \chapter{SAT}
+The \textbf{Boolean Satisfiability} can be exploited in order to prove that the given ammount of presents, with the given dimensions can
+fit in certain positions into the paper sheet. As far we have not numerical variables anymore we must reimplement from scratch the whole
+models definition. We borrowed some concepts from the \textbf{CP} and \textbf{SMT} methods, but we had to port them into a new boolean logic.
 
 \section{Base Model}
+This model is the porting of the \textbf{SMT Base Model}, but we must describe the coordinates system with another variable.
+Indeed, we loose all the variables of the precedent model, and we use a new tensor that will describe the whole problem. 
+
+\begin{center}
+    \begin{adjustwidth}{-1.5cm}{}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \multicolumn{3}{|c|}{\textbf{Parameters}} \\
+            \hline
+            \textbf{Parameter} & \multicolumn{2}{|c|}{\textbf{Description}} \\
+            \hline
+            Width & \multicolumn{2}{|c|}{The Paper Sheet Width} \\
+            \hline
+            Height & \multicolumn{2}{|c|}{The Paper Sheet Height} \\
+            \hline
+            Presents & \multicolumn{2}{|c|}{The number of the Presents to place in the Paper Sheet} \\
+            \hline
+            Dimension X & \multicolumn{2}{|c|}{The array of the x dimensions of the Presents} \\
+            \hline
+            Dimension Y & \multicolumn{2}{|c|}{The array of the y dimensions of the Presents} \\
+            \hline
+            \multicolumn{3}{|c|}{\textbf{Extracted Parameters}} \\
+            \hline
+            \textbf{Parameter} & \textbf{Formula} & \textbf{Description} \\
+            \hline
+            Area & $Area = Width \cdot Height$ & Area of the Paper \\
+            \hline
+            Areas & $Areas[i] = Dimension_x[i] \cdot Dimension_y[i]$ & The array of the areas of the Presents \\
+            \hline
+            \multicolumn{3}{|c|}{\textbf{Variables}} \\
+            \hline
+            \textbf{Variable} & \multicolumn{2}{|c|}{\textbf{Description}} \\
+            \hline
+            Paper &  \multicolumn{2}{|c|}{A 3D boolean tensor describing the presence of the present in a particular position} \\
+            \hline
+        \end{tabular}
+    \end{adjustwidth}
+\end{center}
+
+The $Paper$ tensor has two dimensions for indicating the present position and one dimension indicating the present index. In this way
+we know that the i-th present will occupy the cell in the coordinates x, y if the boolean value of the $tensor[x, y, i]$ is true.
+
 \subsection{Main Problem Constraints}
+Now that the problem variables are decided, we can constraint the $Paper$ with some predicates, in \textbf{Propositional Logic}, in order
+to carry out the solution of the problem.
+
+\begin{itemize}
+    \item[] \textbf{Essential Constraints}
+    \item \textbf{\textit{Two different presents must not overlap:}}
+    \begin{itemize}
+        \item[] Given the two rectangles of two different presents, we can check if they have
+            at least one part in common, just by checking if the tensor at position (x, y)
+            holds in two different presents i and j. The \textit{overlaps} predicate is defined as:
+        \item[] \begin{equation*}\begin{multlined}
+            overlaps(Present_1, Present_2) \leftrightarrow \\
+            \bigvee_{x, y \in Paper}(Paper[x, y, Present_1] \wedge Paper[x, y, Present_2])
+        \end{multlined}\end{equation*}
+    \end{itemize}
+    \item \textbf{\textit{The presents must have and occupy the correct dimension:}}
+    \begin{itemize}
+        \item[] This was one of the hardes constrain to develop. We have to force the tensor to have the right
+            ammount of true values in the correct place, for each present at a gien coordinate. The idea is
+            that given a certain coordinate, we force the tensor to obbey a certain \textit{Disjunctive Normal Formula}.
+        \item[] For each present, we fix a tuple of initial coordinates $(x_0, y_0)$ and we force the tensor to hold at 
+                all the subsequent $Width \times Height$ coordinates, and not to hold the rest.
+                Then we translate the initial coordinates and repeat the extraction of the formula.
+                Once we have all the formulas for all the possible initial position of the present in the paper sheet,
+                we concatenate them with an Or series into a \textit{Disjunctive Normal Formula}:
+        \item[] \begin{equation*}\begin{multlined}
+            \bigwedge2_{p \in [1, Presents]}
+            \bigvee_{
+                \substack{
+                    x_0 \in [1, Width - Dimension_x[p]]\\
+                    y_0 \in [1, Height - Dimension_y[p]]
+                }
+            }\\
+            (\bigwedge2_{
+                \substack{
+                    x \in [x_0, Dimension_x[p]] \\
+                    y \in [y_0, Dimension_y[p]]
+                }
+             } Paper[x, y, p])
+             \vee \\
+            (\bigwedge2_{
+                \substack{
+                    x \in [1, x_0] \cup [x_0 + Dimension_x[p], Width]\\
+                    y \in [1, y_0] \cup [y_0 + Dimension_y[p], Height]
+                }
+             } \neg Paper[x, y, p]) 
+        \end{multlined}\end{equation*}
+    \end{itemize}
+    \item \textbf{\textit{Each tensor tuple of coordinates must have at least one present:}}
+    \item[] We want the tensor to have at least one present at each tuple of coordinates $(x, y)$:
+    \begin{itemize}
+        \item[] \begin{equation*}
+            \bigwedge2_{
+                \substack{
+                    x \in [1, Width]\\
+                    y \in [1, Height]
+                }
+            } \bigvee_{p \in [1, Presents]} Paper[x, y, p]
+        \end{equation*}
+    \end{itemize} 
+    \item[] \textbf{Additional Constraints}
+    \item[] These constraint are not essential to solve the general formulation of this problem,
+        but they results helpful as they restrict the search space in the given instances.
+        The underlying assumption is that the instance contains the right amount of presents such
+        that the area of the Paper Sheet is completely used.
+    \item \textbf{\textit{}}
+    \item \textbf{\textit{The presents must fill the row (column) dimension:}}
+        \begin{itemize}
+            \item[] We want to use each row \textit{(or column)} such that we use all of the available area of the paper.
+            \item[] Drawing a vertical \textit{(horizontal)} we check that at least one present holds in the tensor in the line coordinates:
+            \item[] Rows: \begin{equation*}\bigvee_{y \in [1, Height]} \bigwedge2_{x \in [1, Width]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
+            \item[] Cols: \begin{equation*}\bigvee_{x \in [1, Width]} \bigwedge2_{y \in [1, Height]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
+        \end{itemize}
+\end{itemize}
+
+\subsection{Results}
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
 
 \section{Rotation Model}
 
-\section{Remarks}
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{\textbf{Results}} \\
+        \hline
+        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\section{Remarks and Results}
+There are just a few of the implemented model because we wanted to devolop them just by using the Popositional Logic predicates, without recurring with Arithmetics
+and Numerical calculus.\\
+
+We briefly recap the overall results of the previous models in a textual informative table:
+
+\begin{center}
+    \begin{adjustwidth}{-1.5cm}{}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
+            \hline
+            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
+            \hline
+        \end{tabular}
+    \end{adjustwidth}
+\end{center}
