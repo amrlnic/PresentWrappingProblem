@@ -1,4 +1,4 @@
-from SAT.src.python.AbstractModel import AbstractModel
+from SAT.src.AbstractModel import AbstractModel
 
 class Model(AbstractModel):
     def get_constraints(self):

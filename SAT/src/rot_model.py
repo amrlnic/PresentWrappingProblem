@@ -1,4 +1,4 @@
-from SAT.src.python.base_model import Model as BaseModel
+from SAT.src.base_model import Model as BaseModel
 
 class Model(BaseModel):
 

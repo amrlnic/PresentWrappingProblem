@@ -1,5 +1,3 @@
-import math
-
 class AbstractModel:
     def __init__(self, instance):
         import z3
@@ -37,7 +35,8 @@ class AbstractModel:
                 solution = self.solver.model()
                 solution = { str(k): self.backend.is_true(solution[k]) for k in solution }
                 solved = tuple([ self.find_present_coordinates(solution, p) for p in range(1, self.presents + 1) ])
-                self.instance.add_solution(solved)
+                stat = { k: v for k, v in self.solver.statistics() }
+                self.instance.add_solution(solved, stat)
                 self.solver.add(
                     self.backend.Not(
                         self.backend.And(
