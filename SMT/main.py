@@ -48,7 +48,7 @@ def main(instance, all_solutions=False, smt_lib=False, model='base_model'):
                         model.eval(solution['coord_y'](p)).as_long(),
                         z3.is_true(model.eval(solution['rotated'](p))) if 'rotated' in solution else False
                     ))
-                instance.add_solution(tuple(coords))
+                instance.add_solution(tuple(coords), { k: v for k, v in solver.statistics() }) 
             else: break
             if not all_solutions: break
             new_problem = '''
@@ -64,8 +64,7 @@ def main(instance, all_solutions=False, smt_lib=False, model='base_model'):
                     {f'(rotated {i + 1})' if r else f'(not (rotated {i + 1}))'}
                 '''
             new_problem += '\n)))'
-            solver.add(z3.parse_smt2_string(new_problem))
-                    
+            solver.add(z3.parse_smt2_string(new_problem))    
 
     else:
         import importlib

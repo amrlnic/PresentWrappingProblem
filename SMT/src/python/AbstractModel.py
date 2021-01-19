@@ -43,7 +43,8 @@ class AbstractModel:
                         )
                         for i in range(self.presents)
                     ])
-                self.instance.add_solution(solution)
+                stat = { k: v for k, v in self.solver.statistics() }
+                self.instance.add_solution(solution, stat)
                 self.solver.add(
                     self.backend.Not(
                         self.backend.And(*[

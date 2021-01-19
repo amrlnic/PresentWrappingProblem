@@ -22,6 +22,7 @@ if __name__ == '__main__':
     arg_parser.add_argument('-img', '--images', default=None, type=str, help='Directory where to store the image representations of the outputs')
     arg_parser.add_argument('-ni', '--no-images', nargs='?', default=False, const=True, help='Prevent the generation of the image representation')
     arg_parser.add_argument('-a', '--all-solutions', nargs='?', default=False, const=True, help='Get all the solutions for each instance of the problem')
+    arg_parser.add_argument('-s', '--print-stat', nargs='?', default=False, const=True, help='Print statistics for the first solution')
     try: args, unk = arg_parser.parse_known_args()
     except: arg_parser.print_help(), exit(1)
    
@@ -68,6 +69,22 @@ if __name__ == '__main__':
         start_time = time.time()
         resolver(instance, all_solutions=args.all_solutions, **configuration)
         print(f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {time.time() - start_time:0.3f}s')
+        if args.print_stat and len(instance.statistics):
+            stats = instance.statistics[0]
+            if args.method == 'CP':
+                print({
+                    'time': stats['solveTime'].total_seconds(),
+                    'nodes': stats['nodes'],
+                    'propagations': stats['propagations'],
+                    'memory': stats['peakMem'],
+                })
+            else:
+                print({
+                    'time': stats['time'],
+                    'nodes': stats['decisions'] if 'decisions' in stats else stats['sat decisions'],
+                    'propagations': stats['propagations'] if 'propagations' in stats else (stats['sat propagations 2ary'] + stats['sat propagations nary']),
+                    'memory': stats['max memory'],
+                })
         write_instance_to_file(instance, output, all_solutions=args.all_solutions)
         if not args.no_images: plot_instance_to_file(instance, image_output, all_solutions=args.all_solutions)
     # except Exception as e: print(f'ERROR: Error during the execution of the given method'), print(e), exit(1)

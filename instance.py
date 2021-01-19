@@ -3,10 +3,13 @@ class Instance:
         self.size = size
         self.presents = presents
         self.solutions = None
+        self.statistics = None
 
-    def add_solution(self, solution):
+    def add_solution(self, solution, statistics=None):
         if self.solutions is None: self.solutions = tuple()
+        if self.statistics is None: self.statistics = tuple()
         self.solutions += (tuple(solution), )
+        self.statistics += (statistics, )
         return self
 
     def clear(self):

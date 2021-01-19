@@ -23,6 +23,7 @@ def main(instance, all_solutions=False, model='dup_rot_sym_model', solver='chuff
         optimisation_level=optimization,
         all_solutions=all_solutions
     )
+    stats =  results.statistics
 
     if results.status == mz.Status.SATISFIED: results = [ results.solution ]
     elif results.status == mz.Status.ALL_SOLUTIONS: results = results.solution
@@ -31,5 +32,6 @@ def main(instance, all_solutions=False, model='dup_rot_sym_model', solver='chuff
         instance.add_solution(
             tuple((x, y, bool(r))  for x, y, r in zip(result.COORD_X, result.COORD_Y, result.ROTATED))
                 if hasattr(result, 'ROTATED') else
-            tuple((x, y, False)  for x, y in zip(result.COORD_X, result.COORD_Y))
+            tuple((x, y, False)  for x, y in zip(result.COORD_X, result.COORD_Y)),
+            stats
         )
