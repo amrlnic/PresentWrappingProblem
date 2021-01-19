@@ -1,29 +1,23 @@
-# PresentWrappingProblem
+# ***Present Wrapping Problem - Command Line Interface***
+# Main Program
 
-It is a common practice that a private business rewards its loyal clients with presents, which are typically wrapped in a costly corporate paper covered with the logo of the business. Imagine that you work for such a business which wants to limit the overall amount of paper that can be used for this purpose, in order to reduce the associated expenses. As the combinatorial decision and optimization expert, you are assigned to solve the Present Wrapping Problem (PWP): given a wrapping paper roll of a certain dimension and a list of presents, decide how to cut oﬀ pieces of paper so that all the presents can be wrapped. Consider that each present is described by the dimensions of the piece of paper needed to wrap it. Moreover, each necessary piece of paper cannot be rotated when cutting oﬀ, to respect the direction of the patterns in the paper.
-
-
-# CLI
-
-Command:
+### **Command:**
 
 `python main.py [arguments]`
 
-\
-Arguments:
+### **Arguments:**
 | Argument | Default | Description |
 |:---------|:--------|:------------|
-| `-h`| ------------ | show help message and exit|
-| `-m METHOD, --method METHOD` | REQUIRED | Method used to carry out the solution(s), possible: `CP`, `SAT`, `SMT`|
-| `-i INPUT, --input INPUT` | `./instances` | Files or directories where to locate the problem instaces|
+| `-h, --help` | --- | show help message and exit |
+| `-m {CP,SAT,SMT}, --method {CP,SAT,SMT}` | REQUIRED | Method used to carry out the solution(s), possible: `CP`, `SAT`, `SMT` |
+| `-i INPUT, --input INPUT` | `./instaces` | Files or directories where to locate the problem instaces |
 | `-o OUTPUT, --output OUTPUT` | `{METHOD}/out` | Directory where to store the outputs |
-| `-img IMAGES, --images IMAGES` | `{METHOD}/images` |  Directory where to store the image representations of the outputs |
+| `-img IMAGES, --images IMAGES` | `{METHOD}/images` | Directory where to store the image representations of the outputs |
 | `-ni [NO_IMAGES], --no-images [NO_IMAGES]` | `False` | Prevent the generation of the image representation |
-| `-s [ALL_SOLUTIONS], --all-solutions [ALL_SOLUTIONS]` | `False` | Get all the solutions for each instance of the problem |
+| `-a [ALL_SOLUTIONS], --all-solutions [ALL_SOLUTIONS]` | `False` | Get all the solutions for each instance of the problem |
+| `-s [PRINT_STAT], --print-stat [PRINT_STAT]` | `False` | Print statistics for the first solution |
 
-\
-\
-Suggested Commands:
+### **Suggested Commands:**
 
 | Task | Command | Description |
 | ---- | ------- | ----------- |
@@ -31,3 +25,36 @@ Suggested Commands:
 | CP   | `python main.py -m cp` | Solve all the inputs with CP, command used to generate outputs | 
 | SAT  | `python main.py -m sat` | Solve all the inputs with SAT, command used to generate outputs | 
 | SMT  | `python main.py -m smt` | Solve all the inputs with SMT, command used to generate outputs | 
+
+# Structure
+## Main
+The main program is an abstract interface for each resolution method available. The program will invoke the single `{METHOD}/main.py` subroutine of the choosen method, passing the right parameters and instances to it. Each subroutine can also take its command line arguments too. As Python works in modules, is not possible to launch any of the subroutines singularly, you need to use this interface. 
+
+## CP
+The code is contained in a MiniZinc project, under the `CP/src` folder. The models implementations are stored in `CP/src/model` folder, while some useful testing data are stored in `CP/src/data`.
+
+### **Arguments:**
+| Argument | Default | Description |
+|:---------|:--------|:------------|
+| `--model` | `dup_rot_sym_model` | The model to be used in order to build the problem for the solver |
+| `--solver` | `chuffed` | The MiniZinc solver used to carry out the problem |
+| `--optimization` | `1` | The optimization level of MiniZinc compiler |
+| `--free-search` | `False` | Allow the solver to use Free Search mode |
+| `--random-seed` | `42` | The random seed used in the search |
+
+## SMT
+The source code is available in two different programming language: through the z3 python API or using the STM2Lib syntax. In the first case the program is completely built on the z3 python stack, while in the latter the z3 python Solver API load the program from a source file of `.smt` extension, adding to it the parameter definitions. In the `SMT/src/smt2` folder are stored the model programs for the SMT2Lib language, while the using of z3 api allow us to use a more pythonic object oriented approach: we defined an abstract model class and we built each other model by combining the subclass chain of other models. All the python models are stored in `SMT/src/python`.
+
+### **Arguments:**
+| Argument | Default | Description |
+|:---------|:--------|:------------|
+| `--model` | `base_model` | The model to be used in order to build the problem for the solver |
+| `--smt-lib` | `False` | True=Uses the smt2-lib standard language, False=Uses python api of z3 |
+
+## SAT
+As for SMT language, but since we struggled to implement a generic case of the problem through the SMT2Lib standard, we decided to implement just the python models, stored in the `SAT/src` folder. 
+
+### **Arguments:**
+| Argument | Default | Description |
+|:---------|:--------|:------------|
+| `--model` | `base_model` | The model to be used in order to build the problem for the solver |
