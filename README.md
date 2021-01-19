@@ -39,7 +39,7 @@ The code is contained in a MiniZinc project, under the `CP/src` folder. The mode
 | `--model` | `dup_rot_sym_model` | The model to be used in order to build the problem for the solver |
 | `--solver` | `chuffed` | The MiniZinc solver used to carry out the problem |
 | `--optimization` | `1` | The optimization level of MiniZinc compiler |
-| `--free-search` | `False` | Allow the solver to use Free Search mode |
+| `--no-free-search` | `False` | Disallow the solver to use Free Search mode |
 | `--random-seed` | `42` | The random seed used in the search |
 
 ## SMT
@@ -58,3 +58,12 @@ As for SMT language, but since we struggled to implement a generic case of the p
 | Argument | Default | Description |
 |:---------|:--------|:------------|
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
+
+## Statistic
+This is another python program used to run in parallel the solver over the entire set of instances and store in a file the statistics of the resolution for each method.
+
+To run it just run the command:
+
+`python statistics.py`
+
+**WARNING:** This program can take hours! 
