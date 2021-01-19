@@ -34,9 +34,8 @@ def get_execution_time(args):
 
 def main():
     methods = (
-        # ('CP', CP,  ('base_model', 'sym_model', 'rot_model', 'dup_sym_model', 'rot_sym_model', 'dup_rot_sym_model', 'base_global_model', 'rot_global_model')),
-        # ('SMT', SMT, ('base_model', 'sym_model', 'rot_model', 'dup_sym_model', 'rot_sym_model', 'dup_rot_sym_model')),
-        ('SMT', SMT, ('rot_model', 'dup_sym_model', 'rot_sym_model', 'dup_rot_sym_model')),
+        ('CP', CP,  ('base_model', 'sym_model', 'rot_model', 'dup_sym_model', 'rot_sym_model', 'dup_rot_sym_model', 'base_global_model', 'rot_global_model')),
+        ('SMT', SMT, ('base_model', 'sym_model', 'rot_model', 'dup_sym_model', 'rot_sym_model', 'dup_rot_sym_model')),
         ('SAT', SAT, ('base_model', 'rot_model')),
     )
     instance_files = os.listdir('instances')
