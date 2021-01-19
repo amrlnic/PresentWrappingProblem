@@ -71,35 +71,38 @@ to carry out the solution of the problem.
                 all the subsequent $Width \times Height$ coordinates, and not to hold the rest.
                 Then we translate the initial coordinates and repeat the extraction of the formula.
                 Once we have all the formulas for all the possible initial position of the present in the paper sheet,
-                we concatenate them with an Or series into a \textit{Disjunctive Normal Formula}:
+                we concatenate them with an Or series into a \textit{Disjunctive Normal Formula}.
+                Let's define the following predicate, where $p$ is the index of the current present:
         \item[] \begin{equation*}\begin{multlined}
-            \bigwedge2_{p \in [1, Presents]}
+            correct\_dimension(p, dx, dy) \leftrightarrow \\
             \bigvee_{
                 \substack{
-                    x_0 \in [1, Width - Dimension_x[p]]\\
-                    y_0 \in [1, Height - Dimension_y[p]]
+                    x_0 \in [1, Width - dx]\\
+                    y_0 \in [1, Height - dy]
                 }
-            }\\
-            (\bigwedge2_{
+            }
+            (\bigwedge_{
                 \substack{
-                    x \in [x_0, Dimension_x[p]] \\
-                    y \in [y_0, Dimension_y[p]]
+                    x \in [x_0, x_0 + dx] \\
+                    y \in [y_0, y_0 + dy]
                 }
              } Paper[x, y, p])
-             \vee \\
-            (\bigwedge2_{
+             \vee
+            (\bigwedge_{
                 \substack{
-                    x \in [1, x_0] \cup [x_0 + Dimension_x[p], Width]\\
-                    y \in [1, y_0] \cup [y_0 + Dimension_y[p], Height]
+                    x \in [1, x_0] \cup [x_0 + dx + 1, Width]\\
+                    y \in [1, y_0] \cup [y_0 + dy + 1, Height]
                 }
              } \neg Paper[x, y, p]) 
         \end{multlined}\end{equation*}
+        \item[] So we end up with the full constrain:\\
+        \begin{equation*} \bigwedge_{p \in [1, Presents]} correct\_dimension(p, Dimension_x[p], Dimension_y[p]) \end{equation*}  
     \end{itemize}
     \item \textbf{\textit{Each tensor tuple of coordinates must have at least one present:}}
     \item[] We want the tensor to have at least one present at each tuple of coordinates $(x, y)$:
     \begin{itemize}
         \item[] \begin{equation*}
-            \bigwedge2_{
+            \bigwedge_{
                 \substack{
                     x \in [1, Width]\\
                     y \in [1, Height]
@@ -117,8 +120,8 @@ to carry out the solution of the problem.
         \begin{itemize}
             \item[] We want to use each row \textit{(or column)} such that we use all of the available area of the paper.
             \item[] Drawing a vertical \textit{(horizontal)} we check that at least one present holds in the tensor in the line coordinates:
-            \item[] Rows: \begin{equation*}\bigvee_{y \in [1, Height]} \bigwedge2_{x \in [1, Width]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
-            \item[] Cols: \begin{equation*}\bigvee_{x \in [1, Width]} \bigwedge2_{y \in [1, Height]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
+            \item[] Rows: \begin{equation*}\bigvee_{y \in [1, Height]} \bigwedge_{x \in [1, Width]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
+            \item[] Cols: \begin{equation*}\bigvee_{x \in [1, Width]} \bigwedge_{y \in [1, Height]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
         \end{itemize}
 \end{itemize}
 
@@ -134,6 +137,31 @@ to carry out the solution of the problem.
 \end{center}
 
 \section{Rotation Model}
+As for \textbf{CP} and \textbf{SMT}, we just need another variable that keeps track of the rotation of each presnt in the paper sheet:
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{\textbf{Variables}} \\
+        \hline
+        \textbf{Variable} & {\textbf{Description}} \\
+        \hline
+        Rotated & The boolean array that indicates whether a present is rotated or not \\
+        \hline
+    \end{tabular}
+\end{center}
+
+In this case, we do not need to use a proxy to gather the correct dimension, we just check the correct dimension in two different ways: the normal or the rotated one.
+Like this, we can place each present in the normal \textit{OR} the rotated way and this is the resulting constrain: 
+\begin{equation*}\begin{multlined}
+    \bigwedge_{p \in [1, Presents]} (\\
+        correct\_dimension(p, Dimension_x[p], Dimension_y[p]) \vee\\
+        correct\_dimension(p, Dimension_y[p], Dimension_x[p]) \\
+    )
+\end{multlined}\end{equation*}  
+
+As we can see, by switching the two dimension, we can simply rotate the present.
+
 
 \begin{center}
     \begin{tabular}{|c|c|c|c|}
