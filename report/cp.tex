@@ -160,50 +160,7 @@ To lower the elasped time, we can tell to the solver how to optimize the search 
 We also tried any combination of all the possible parameters in order to confirm our reasoning, so we end up by choosing
 this setup because it resulted the most performant.
 
-\subsection{Results}
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-        8x8 & 0.001 & 5 & 179 \\ \hline
-        9x9 & 0.001 & 6 & 287 \\ \hline
-        10x10 & 0.001 & 6 & 405 \\ \hline
-        11x11 & 0.000 & 10 & 705 \\ \hline
-        12x12 & 0.001 & 14 & 1328 \\ \hline
-        13x13 & 0.002 & 15 & 1424 \\ \hline
-        14x14 & 0.001 & 11 & 985 \\ \hline
-        15x15 & 0.001 & 13 & 1118 \\ \hline
-        16x16 & 0.001 & 12 & 1272 \\ \hline
-        17x17 & 0.004 & 48 & 5825 \\ \hline
-        18x18 & 0.021 & 258 & 49511 \\ \hline
-        19x19 & 0.002 & 17 & 2481 \\ \hline
-        20x20 & 0.023 & 247 & 48836 \\ \hline
-        21x21 & 0.002 & 24 & 3189 \\ \hline
-        22x22 & 0.175 & 1658 & 343900 \\ \hline
-        23x23 & 0.270 & 2252 & 604184 \\ \hline
-        24x24 & 0.003 & 24 & 4087 \\ \hline
-        25x25 & 0.205 & 1717 & 358523 \\ \hline
-        26x26 & 0.293 & 2644 & 697160 \\ \hline
-        27x27 & 0.006 & 40 & 9131 \\ \hline
-        28x28 & 0.038 & 348 & 87336 \\ \hline
-        29x29 & 0.039 & 310 & 81966 \\ \hline
-        30x30 & 0.007 & 58 & 12387 \\ \hline
-        31x31 & 0.005 & 28 & 5009 \\ \hline
-        32x32 & 0.073 & 497 & 109458 \\ \hline
-        33x33 & 12.058 & 43163 & 13179446 \\ \hline
-        34x34 & 0.010 & 103 & 17543 \\ \hline
-        35x35 & 0.009 & 37 & 8248 \\ \hline
-        36x36 & 0.007 & 35 & 8020 \\ \hline
-        37x37 & 20.295 & 61331 & 20748067 \\ \hline
-        38x38 & 0.141 & 1165 & 306900 \\ \hline
-        39x39 & 0.061 & 298 & 108612 \\ \hline
-        40x40 & 0.009 & 31 & 6054 \\ \hline
-        rotation\_test & - & - & - \\ \hline
-    \end{tabular}
-\end{center}
+\input{results/cp_base_model.tex}
 
 \section{Symmmetry Model}
 We had further analysed the problem in order to understand if, from an erroneous solution,
@@ -256,50 +213,7 @@ by finding an unsatisfiable combination out of the all simmetricals.
 
 % TODO: Example Image
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-        8x8 & 0.001 & 3 & 150 \\ \hline
-        9x9 & 0.001 & 5 & 357 \\ \hline
-        10x10 & 0.003 & 5 & 461 \\ \hline
-        11x11 & 0.001 & 10 & 1265 \\ \hline
-        12x12 & 0.007 & 45 & 8116 \\ \hline
-        13x13 & 0.004 & 11 & 2159 \\ \hline
-        14x14 & 0.001 & 19 & 2599 \\ \hline
-        15x15 & 0.011 & 142 & 27081 \\ \hline
-        16x16 & 0.002 & 9 & 1814 \\ \hline
-        17x17 & 0.011 & 80 & 24551 \\ \hline
-        18x18 & 0.003 & 26 & 5218 \\ \hline
-        19x19 & 0.039 & 316 & 91564 \\ \hline
-        20x20 & 0.099 & 536 & 123172 \\ \hline
-        21x21 & 0.192 & 900 & 304328 \\ \hline
-        22x22 & 0.125 & 544 & 190132 \\ \hline
-        23x23 & 6.933 & 19260 & 9171901 \\ \hline
-        24x24 & 0.371 & 1488 & 638669 \\ \hline
-        25x25 & 3.943 & 12490 & 4788188 \\ \hline
-        26x26 & 1.367 & 3595 & 2087114 \\ \hline
-        27x27 & 2.178 & 4784 & 3049562 \\ \hline
-        28x28 & 16.155 & 43295 & 23048023 \\ \hline
-        29x29 & 5.314 & 15069 & 11628851 \\ \hline
-        30x30 & 0.046 & 287 & 100741 \\ \hline
-        31x31 & 0.135 & 916 & 301542 \\ \hline
-        32x32 & 0.148 & 387 & 267579 \\ \hline
-        33x33 & 0.350 & 1580 & 770610 \\ \hline
-        34x34 & 0.471 & 1701 & 827950 \\ \hline
-        35x35 & 0.410 & 1752 & 935117 \\ \hline
-        36x36 & 4.800 & 14412 & 8047884 \\ \hline
-        37x37 & 39.646 & 93562 & 45084879 \\ \hline
-        38x38 & 1.475 & 6150 & 2711326 \\ \hline
-        39x39 & 4.727 & 16581 & 10166321 \\ \hline
-        40x40 & 2.233 & 7408 & 3362652 \\ \hline
-        rotation\_test & - & - & - \\ \hline
-    \end{tabular}
-\end{center}
-
+\input{results/cp_sym_model.tex}
 
 \section{Rotation Model}
 In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
@@ -342,64 +256,14 @@ $
 Now, we can change any constraint that involves a dimension variable with the corresponding proxy.
 In this way we obtained a model that can solve instances of the problem that are satisfiable only if we rotate one \textit{(or more)} present.
 
-\begin{center}
-    \begin{tabular}{|c|r|r|r|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-        8x8 & 0.001 & 9 & 658 \\ \hline
-        9x9 & 0.001 & 10 & 1210 \\ \hline
-        10x10 & 0.001 & 12 & 1528 \\ \hline
-        11x11 & 0.004 & 36 & 6827 \\ \hline
-        12x12 & 0.002 & 27 & 4698 \\ \hline
-        13x13 & 0.003 & 31 & 5859 \\ \hline
-        14x14 & 0.006 & 43 & 8206 \\ \hline
-        15x15 & 0.007 & 37 & 11236 \\ \hline
-        16x16 & 0.003 & 23 & 6360 \\ \hline
-        17x17 & 0.004 & 34 & 10908 \\ \hline
-        18x18 & 0.219 & 1765 & 595481 \\ \hline
-        19x19 & 0.036 & 323 & 110395 \\ \hline
-        20x20 & 0.034 & 317 & 120480 \\ \hline
-        21x21 & 0.022 & 257 & 90569 \\ \hline
-        22x22 & 0.013 & 68 & 55549 \\ \hline
-        23x23 & 5.820 & 18963 & 9928170 \\ \hline
-        24x24 & 1.671 & 6876 & 3466041 \\ \hline
-        25x25 & 0.321 & 1594 & 940941 \\ \hline
-        26x26 & 4.605 & 10965 & 5739120 \\ \hline
-        27x27 & 8.806 & 21462 & 14169523 \\ \hline
-        28x28 & 9.925 & 23327 & 16753958 \\ \hline
-        29x29 & 6.659 & 17029 & 11653121 \\ \hline
-        30x30 & 0.481 & 1402 & 923532 \\ \hline
-        31x31 & 2.615 & 7287 & 5090515 \\ \hline
-        32x32 & 81.626 & 124826 & 106149654 \\ \hline
-        33x33 & 0.140 & 531 & 373851 \\ \hline
-        34x34 & 16.122 & 33856 & 25006238 \\ \hline
-        35x35 & 8.576 & 16524 & 11766051 \\ \hline
-        36x36 & 99.790 & 138777 & 123080912 \\ \hline
-        37x37 & 31.674 & 58804 & 42774026 \\ \hline
-        38x38 & 0.683 & 1636 & 1383358 \\ \hline
-        39x39 & 148.920 & 201895 & 180321315 \\ \hline
-        40x40 & 2.876 & 5296 & 3632636 \\ \hline
-        rotation\_test & 0.000 & 8 & 422 \\ \hline
-    \end{tabular}
-\end{center}
+\input{results/cp_rot_model.tex}
 
 \section{Symmetry Rotation Model}
 As we growth the model in modules, we can just combine the \textbf{Symmetry Model} with the \textbf{Rotation Model} and we end up
 with a \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
 solutions.
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/cp_rot_sym_model.tex}
 
 \section{Duplicated Symmetry Model}
 Another point to take in account, is the possibility of the presence of presents that have the same size. As we modelled the problem,
@@ -418,49 +282,7 @@ In this formula we are exploiting the search method, indeed we do not need to co
 approach do it for us. Furthermore, we decided to use the already sorted areas array for efficiency reasons, because the same size
 presents will appear in near positions in that array, while they could appear in distant positions in the non-sorted one. 
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-        8x8 & 0.001 & 3 & 150 \\ \hline
-        9x9 & 0.001 & 5 & 357 \\ \hline
-        10x10 & 0.001 & 5 & 461 \\ \hline
-        11x11 & 0.006 & 10 & 1265 \\ \hline
-        12x12 & 0.004 & 45 & 8116 \\ \hline
-        13x13 & 0.001 & 11 & 2159 \\ \hline
-        14x14 & 0.011 & 19 & 2599 \\ \hline
-        15x15 & 0.020 & 142 & 27081 \\ \hline
-        16x16 & 0.002 & 9 & 1814 \\ \hline
-        17x17 & 0.010 & 80 & 24551 \\ \hline
-        18x18 & 0.005 & 26 & 5218 \\ \hline
-        19x19 & 0.043 & 316 & 91564 \\ \hline
-        20x20 & 0.057 & 536 & 123172 \\ \hline
-        21x21 & 0.338 & 900 & 304328 \\ \hline
-        22x22 & 0.186 & 544 & 190132 \\ \hline
-        23x23 & 7.614 & 19260 & 9171901 \\ \hline
-        24x24 & 0.516 & 1488 & 638669 \\ \hline
-        25x25 & 4.865 & 12490 & 4788188 \\ \hline
-        26x26 & 1.409 & 3595 & 2087114 \\ \hline
-        27x27 & 2.361 & 4784 & 3049562 \\ \hline
-        28x28 & 5.475 & 12410 & 6058207 \\ \hline
-        29x29 & 9.348 & 19882 & 12918825 \\ \hline
-        30x30 & 0.095 & 287 & 100741 \\ \hline
-        31x31 & 0.229 & 916 & 301542 \\ \hline
-        32x32 & 0.252 & 387 & 267579 \\ \hline
-        33x33 & 0.477 & 1580 & 770610 \\ \hline
-        34x34 & 0.593 & 1701 & 827950 \\ \hline
-        35x35 & 0.472 & 1752 & 935117 \\ \hline
-        36x36 & 5.979 & 14412 & 8047902 \\ \hline
-        37x37 & 52.361 & 94388 & 48406756 \\ \hline
-        38x38 & 1.842 & 6150 & 2711326 \\ \hline
-        39x39 & 242.096 & 375575 & 235754553 \\ \hline
-        40x40 & 3.396 & 7408 & 3362652 \\ \hline
-        rotation\_test & - & - & - \\ \hline
-    \end{tabular}
-\end{center}
+\input{results/cp_dup_sym_model.tex}
 
 \section{Duplicated Symmetry Rotation Model}
 The modularity of our model eassily achieves a new model that takes in account all the discussed properties of the problem
@@ -468,15 +290,8 @@ The modularity of our model eassily achieves a new model that takes in account a
 The results show that this model achieve the best performance, as the number of errors and the quantity of the explorated nodes in the
 search tree drastically decrease.  
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/cp_dup_rot_sym_model.tex}
+
 
 \section{Global Constraints Model}
 For the study case, we choose to try to implement our constraints through the already defined MiniZinc global constraints:
@@ -497,51 +312,8 @@ For the study case, we choose to try to implement our constraints through the al
 At the end, we choosed to stuck with our implementation because it was well optimized for this kind of problem, and results to be more
 efficient in terms of time, during the resolution of big size problems.
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \multicolumn{4}{|c|}{\textbf{Base model}} \\
-        \hline
-        8x8 & 0.000 & 5 & 102 \\ \hline
-        9x9 & 0.000 & 6 & 214 \\ \hline
-        10x10 & 0.000 & 6 & 271 \\ \hline
-        11x11 & 0.000 & 14 & 739 \\ \hline
-        12x12 & 0.001 & 13 & 1091 \\ \hline
-        13x13 & 0.000 & 13 & 905 \\ \hline
-        14x14 & 0.001 & 11 & 736 \\ \hline
-        15x15 & 0.001 & 13 & 897 \\ \hline
-        16x16 & 0.000 & 12 & 1021 \\ \hline
-        17x17 & 0.002 & 35 & 4494 \\ \hline
-        18x18 & 0.454 & 2759 & 533562 \\ \hline
-        19x19 & 0.001 & 17 & 1954 \\ \hline
-        20x20 & 0.045 & 659 & 119592 \\ \hline
-        21x21 & 0.001 & 22 & 2618 \\ \hline
-        22x22 & 0.108 & 972 & 199771 \\ \hline
-        23x23 & 0.965 & 4974 & 1203317 \\ \hline
-        24x24 & 0.002 & 24 & 3684 \\ \hline
-        25x25 & 0.467 & 3715 & 953430 \\ \hline
-        26x26 & 4.947 & 33030 & 12338309 \\ \hline
-        27x27 & 0.004 & 42 & 9089 \\ \hline
-        28x28 & 1.104 & 4707 & 1339405 \\ \hline
-        29x29 & 2.633 & 10540 & 3973251 \\ \hline
-        30x30 & 0.005 & 54 & 10476 \\ \hline
-        31x31 & 0.001 & 28 & 4340 \\ \hline
-        32x32 & 16.342 & 87194 & 36841443 \\ \hline
-        33x33 & 1.717 & 9931 & 4226475 \\ \hline
-        34x34 & 0.009 & 90 & 18068 \\ \hline
-        35x35 & 0.003 & 34 & 6829 \\ \hline
-        36x36 & 0.004 & 35 & 7112 \\ \hline
-        37x37 & 42.772 & 117956 & 47269882 \\ \hline
-        38x38 & 1.838 & 10411 & 1930077 \\ \hline
-        39x39 & 52.227 & 146848 & 61008260 \\ \hline
-        40x40 & 0.002 & 35 & 5639 \\ \hline
-        rotation\_test & - & - & - \\ \hline
-        \multicolumn{4}{|c|}{\textbf{Rotation model}} \\
-    \end{tabular}
-\end{center}
+\input{results/cp_base_global_model.tex}
+\input{results/cp_rot_global_model.tex}
 
 \section{Remarks and Results}
 As MiniZinc is an high level interface for many solver, we tryied different solver configurations in order to understand which one performs better
@@ -551,14 +323,4 @@ pattern in the search space in order to prevent the exploration of useles nodes 
 
 We briefly recap the overall results of the previous models in a textual informative table:
 
-\begin{center}
-    \begin{adjustwidth}{-1.5cm}{}
-        \begin{tabular}{|c|c|c|c|c|}
-            \hline
-            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
-            \hline
-            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
-            \hline
-        \end{tabular}
-    \end{adjustwidth}
-\end{center}
+\input{results/cp_final.tex}

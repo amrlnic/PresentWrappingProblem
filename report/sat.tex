@@ -125,31 +125,10 @@ to carry out the solution of the problem.
         \end{itemize}
 \end{itemize}
 
-\subsection{Results}
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/sat_base_model.tex}
 
 \section{Rotation Model}
 As for \textbf{CP} and \textbf{SMT}, we just need another variable that keeps track of the rotation of each presnt in the paper sheet:
-
-\begin{center}
-    \begin{tabular}{|c|c|}
-        \hline
-        \multicolumn{2}{|c|}{\textbf{Variables}} \\
-        \hline
-        \textbf{Variable} & {\textbf{Description}} \\
-        \hline
-        Rotated & The boolean array that indicates whether a present is rotated or not \\
-        \hline
-    \end{tabular}
-\end{center}
 
 In this case, we do not need to use a proxy to gather the correct dimension, we just check the correct dimension in two different ways: the normal or the rotated one.
 Like this, we can place each present in the normal \textit{OR} the rotated way and this is the resulting constrain: 
@@ -162,31 +141,16 @@ Like this, we can place each present in the normal \textit{OR} the rotated way a
 
 As we can see, by switching the two dimension, we can simply rotate the present.
 
+\input{results/sat_rot_model.tex}
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
-
-\section{Remarks and Results}
+\section{On the hardness of SAT modelling}
 There are just a few of the implemented model because we wanted to devolop them just by using the Popositional Logic predicates, without recurring with Arithmetics
-and Numerical calculus.\\
+and Numerical calculus. We strugled to achieve the implementation of new models, but we have been discouraged by the loss of performance in the \textbf{SMT Symmetry Breaking} models,
+so we decided to try to improve as best as possible the basical models.\\
+Another weak point for the \textbf{SAT} is that we can't write a general purpose program in \textbf{SMT2Lib} standard. Indeed, to achieve such a generalization, we need to use
+numerical calculus, not completely available in the \textbf{Propositional Logic}. 
 
+\section{Results}
 We briefly recap the overall results of the previous models in a textual informative table:
 
-\begin{center}
-    \begin{adjustwidth}{-1.5cm}{}
-        \begin{tabular}{|c|c|c|c|c|}
-            \hline
-            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
-            \hline
-            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
-            \hline
-        \end{tabular}
-    \end{adjustwidth}
-\end{center}
+\input{results/sat_final.tex}

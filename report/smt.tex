@@ -132,50 +132,7 @@ We need to define constraints that are able to give valid instructions to the so
 	\end{itemize}
 \end{itemize}
 
-\subsection{Results}
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-		\textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-		\hline
-		8x8 & 0.091 & 8 & 221 \\ \hline
-		9x9 & 0.079 & 25 & 307 \\ \hline
-		10x10 & 0.079 & 44 & 954 \\ \hline
-		11x11 & 0.157 & 148 & 5707 \\ \hline
-		12x12 & 0.162 & 214 & 5214 \\ \hline
-		13x13 & 0.084 & 54 & 1119 \\ \hline
-		14x14 & 0.160 & 84 & 5006 \\ \hline
-		15x15 & 0.311 & 534 & 14617 \\ \hline
-		16x16 & 0.265 & 520 & 13157 \\ \hline
-		17x17 & 0.360 & 1056 & 51701 \\ \hline
-		18x18 & 0.667 & 1963 & 143574 \\ \hline
-		19x19 & 0.471 & 1981 & 98414 \\ \hline
-		20x20 & 1.140 & 3596 & 336263 \\ \hline
-		21x21 & 1.380 & 4962 & 350477 \\ \hline
-		22x22 & 1.234 & 4391 & 273473 \\ \hline
-		23x23 & 13.028 & 9140 & 496203 \\ \hline
-		24x24 & 2.947 & 7538 & 744512 \\ \hline
-		25x25 & 2.635 & 8611 & 571592 \\ \hline
-		26x26 & 36.027 & 24456 & 2294296 \\ \hline
-		27x27 & 17.076 & 11429 & 1054566 \\ \hline
-		28x28 & 49.265 & 33951 & 5081383 \\ \hline
-		29x29 & 65.091 & 49908 & 7666862 \\ \hline
-		30x30 & 29.837 & 11575 & 1098465 \\ \hline
-		31x31 & 3.479 & 8155 & 613409 \\ \hline
-		32x32 & 119.407 & 80793 & 16891820 \\ \hline
-		33x33 & 63.708 & 50550 & 7659959 \\ \hline
-		34x34 & 21.128 & 15144 & 1456046 \\ \hline
-		35x35 & 43.466 & 31302 & 5072455 \\ \hline
-		36x36 & 45.478 & 39013 & 5193048 \\ \hline
-		37x37 & 84.938 & 115989 & 25947324 \\ \hline
-		38x38 & 5.099 & 7602 & 865820 \\ \hline
-		39x39 & 214.940 & 136091 & 31038317 \\ \hline
-		40x40 & 22.037 & 15290 & 2315027 \\ \hline
-		rotation\_test & - & - & - \\ \hline
-    \end{tabular}
-\end{center}
+\input{results/smt_base_model.tex}
 
 \section{Symmmetry Model}
 As has already been done for the implementation in CP, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant. \\
@@ -212,15 +169,8 @@ $
 
 % TODO: Example Image
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/smt_sym_model.tex}
+
 
 \section{Rotation Model}
 In order to expand our model so that it is possible to rotate a block, thus having further solutions to explore in our problem, we needed to add a new \textit{``rotated"} variable:
@@ -254,15 +204,7 @@ Get\_Dimension_y =
 \end{cases}
 $
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/smt_rot_model.tex}
 
 \section{Symmetry Rotation Model}
 Following as done in CP, also in SMT we decided to combine the characteristics of the previously implemented models.\\
@@ -270,15 +212,8 @@ We merge together the \textbf{Symmetry Model} with the \textbf{Rotation Model} a
 the \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
 solutions.
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/smt_rot_sym_model.tex}
+
 
 \section{Duplicated Symmetry Model}
 As we did in the CP models, we can model those instances that have presents with the same dimensions. As we modelled the problem,
@@ -296,15 +231,7 @@ $
 By adding this constraint, we force the solver to exclude the solutions where the same size presents can swap each other,
 just by forcing the solver to put them in the lesser coordinates possible as before they appear in the parameter dimensions array.
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/smt_dup_sym_model.tex}
 
 \section{Duplicated Symmetry Rotation Model}
 
@@ -313,27 +240,9 @@ This model simply incorporates all the features implemented in the previous mode
 In this way it is possible to benefit at the same time from features, such as rotation and the distinction between two different gifts of the same size, and from symmetry breaking to remove rotated and mirrored solutions from the domain.  
 
 
-\begin{center}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \multicolumn{4}{|c|}{\textbf{Results}} \\
-        \hline
-        \textbf{Instance} & \textbf{Time \textit{[s]}} & \textbf{Nodes} & \textbf{Propagations} \\
-        \hline
-    \end{tabular}
-\end{center}
+\input{results/smt_dup_rot_sym_model.tex}
 
 \section{Remarks and Results}
 We briefly recap the overall results of the previous models in a textual informative table:
 
-\begin{center}
-    \begin{adjustwidth}{-1.5cm}{}
-        \begin{tabular}{|c|c|c|c|c|}
-            \hline
-            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
-            \hline
-            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
-            \hline
-        \end{tabular}
-    \end{adjustwidth}
-\end{center}
+\input{results/smt_final.tex}
