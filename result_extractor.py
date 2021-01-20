@@ -50,24 +50,28 @@ if len(sys.argv) > 1:
             if 'base' in model: special_name = ' Base Model'
             else: special_name = ' Rotation Model'
         
+        with_mem = method != 'cp'
+        text_bf_mem = '& \\textbf{Memory} ' if with_mem else ''
         table = f'''
 \\begin{{center}}
-    \\begin{{tabular}}{{|c|c|r|r|}}
+    \\begin{{tabular}}{{|c|c|r|r|{'r|' if with_mem else ''}}}
         \\hline
-        \\multicolumn{{4}}{{|c|}}{{\\textbf{{Results{special_name}}}}} \\\\
+        \\multicolumn{{{5 if with_mem else 4}}}{{|c|}}{{\\textbf{{Results{special_name}}}}} \\\\
         \\hline
-        \\textbf{{Instance}} & \\textbf{{Time}} & \\textbf{{Nodes}} & \\textbf{{Propagations}} \\\\
+        \\textbf{{Instance}} & \\textbf{{Time}} & \\textbf{{Nodes}} & \\textbf{{Propagations}} {text_bf_mem}\\\\
         
         \\hline
 '''
 
         print('=== MISSING INSTANCES ===')
+        other_column = ' & -' if with_mem else ''
         for instance in instances:
             stat = find(stats, instance)
             instance_name = instance.replace('_', '\\_')
             if stat is None or stat['sat'] != 'true':
                 if stat is None: print(f'{method} - {model} - {instance}')
-                table += f'\t\t{instance_name} & - & - & - \\\\ \\hline\n'
+                table += f'\t\t{instance_name} & - & - & -{other_column} \\\\ \\hline\n'
+            elif with_mem: table += f'\t\t{instance_name} & {format_time(stat["time"])} & {int(stat["nodes"]):,d} & {int(stat["propagations"]):,d} & {int(float(stat["memory"]) * 1000):,d} \\\\ \\hline\n'
             else: table += f'\t\t{instance_name} & {format_time(stat["time"])} & {int(stat["nodes"]):,d} & {int(stat["propagations"]):,d} \\\\ \\hline\n'
 
         table += '''
