@@ -135,7 +135,15 @@ We need to define constraints that are able to give valid instructions to the so
 \input{results/smt_base_model.tex}
 
 \section{Symmmetry Model}
-As has already been done for the implementation in CP, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant. \\
+As has already been done for the implementation in CP, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/simple_simmetry.png}
+	\caption{A solution and its symmetry}
+	\label{fig:overlaps}
+\end{figure}
+
 As in the analogous model for CP, here too we have extracted the \textit{``Sorted Area Indexes"} parameter, which is essential to implement the heuristics just described:
 
 \begin{center}
@@ -204,10 +212,25 @@ Get\_Dimension_y =
 \end{cases}
 $
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/rotated_problem.png}
+	\caption{An instance of the problem that is unsatisfiable without the rotation.}
+	\label{fig:overlaps}
+\end{figure}
+
 \input{results/smt_rot_model.tex}
 
 \section{Symmetry Rotation Model}
-Following as done in CP, also in SMT we decided to combine the characteristics of the previously implemented models.\\
+Following as done in CP, also in SMT we decided to combine the characteristics of the previously implemented models.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/rotated_simmetry.png}
+	\caption{A solution and its symmetry with the rotation relaxation}
+	\label{fig:overlaps}
+\end{figure}
+
 We merge together the \textbf{Symmetry Model} with the \textbf{Rotation Model} and we made
 the \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
 solutions.
@@ -218,6 +241,14 @@ solutions.
 \section{Duplicated Symmetry Model}
 As we did in the CP models, we can model those instances that have presents with the same dimensions. As we modelled the problem,
 the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints to take in account symmterical solutions.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/duplicated_problem.png}
+	\caption{An instance where there is the case of several blocks of the same size}
+	\label{fig:overlaps}
+\end{figure}
+
 The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
 coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:\\
 

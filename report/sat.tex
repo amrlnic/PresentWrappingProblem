@@ -46,6 +46,13 @@ Indeed, we loose all the variables of the precedent model, and we use a new tens
 The $Paper$ tensor has two dimensions for indicating the present position and one dimension indicating the present index. In this way
 we know that the i-th present will occupy the cell in the coordinates x, y if the boolean value of the $tensor[x, y, i]$ is true.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/SAT_cube.png}
+	\caption{An instance solved with our SAT implementation.}
+	\label{fig:overlaps}
+\end{figure}
+
 \subsection{Main Problem Constraints}
 Now that the problem variables are decided, we can constraint the $Paper$ with some predicates, in \textbf{Propositional Logic}, in order
 to carry out the solution of the problem.

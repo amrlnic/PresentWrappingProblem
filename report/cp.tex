@@ -171,7 +171,18 @@ and one of the most effective heuristic to place presents is to choose those tha
 in other words, the bigger the present is, the most difficult is to place, the more it will restrict the other presents
 domains and the more effective will be its placement in the first stages. So the best analytical and empirical heuristic
 found so far for this kind of problem is to sort the presents in size order, placing the bigger first and the
-smaller last \cite{binpack, algdesign}.\\
+smaller last \cite{binpack, algdesign}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/simple_simmetry.png}
+	\caption{A solution and its symmetry}
+	\label{fig:overlaps}
+\end{figure}
+
+
+\input{results/cp_sym_model.tex}
+
 Doing this requires a new extracted parameter:
 
 \begin{center}
@@ -211,12 +222,18 @@ By doing this we can exclude all the possible symmetries due to the swap of diff
 Excluding the symmetrical solutions allow us to exclude also the symmetrical part of the search tree that are unsatisfiable, just
 by finding an unsatisfiable combination out of the all simmetricals.
 
-% TODO: Example Image
+\section{Rotation Model}
+In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/rotated_problem.png}
+	\caption{An instance of the problem that is unsatisfiable without the rotation.}
+	\label{fig:overlaps}
+\end{figure}
 
 \input{results/cp_sym_model.tex}
 
-\section{Rotation Model}
-In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
 The rotation model can overwhelm this problem because it looks for any combination of rotated presents over the paper sheet, so we don't need to specify the right combination
 of dimensions that can fit the paper. In order to do this, we need another variable in our description:
 
@@ -263,12 +280,28 @@ As we growth the model in modules, we can just combine the \textbf{Symmetry Mode
 with a \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
 solutions.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/rotated_simmetry.png}
+	\caption{A solution and its symmetry with the rotation relaxation}
+	\label{fig:overlaps}
+\end{figure}
+
 \input{results/cp_rot_sym_model.tex}
 
 \section{Duplicated Symmetry Model}
 Another point to take in account, is the possibility of the presence of presents that have the same size. As we modelled the problem,
 the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints in order to exploit the \textbf{Symmetry Breaking}
-even in these cases. The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
+even in these cases.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/duplicated_problem.png}
+	\caption{An instance where there is the case of several blocks of the same size}
+	\label{fig:overlaps}
+\end{figure}
+
+The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
 coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:\\
 
 $
