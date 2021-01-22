@@ -237,12 +237,21 @@ just by forcing the solver to put them in the lesser coordinates possible as bef
 
 This model simply incorporates all the features implemented in the previous models \textit{(Symmetry, Rotation, Duplicated Presents)}.
 \\
-In this way it is possible to benefit at the same time from features, such as rotation and the distinction between two different gifts of the same size, and from symmetry breaking to remove rotated and mirrored solutions from the domain.  
+In this way it is possible to benefit at the same time from features, such as rotation and the distinction between two different gifts of the same size,
+and from symmetry breaking to remove rotated and mirrored solutions from the domain.  
 
 
 \input{results/smt_dup_rot_sym_model.tex}
 
 \section{Remarks and Results}
+During the resolution of the statistics we tried different \textbf{Resolution Strategy} for the Z3 Solver:
+\begin{itemize}
+	\item \texttt{default} strategy
+	\item \texttt{Z3\_mk\_solver}
+	\item \texttt{Z3\_mk\_simple\_solver}
+\end{itemize}
+We found that the most suitable and efficient for our problem is \texttt{Z3\_mk\_simple\_solver} that optimizes the resolution times up to 15\%.
+
 We briefly recap the overall results of the previous models in a textual informative table:
 
 \input{results/smt_final.tex}

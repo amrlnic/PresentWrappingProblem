@@ -148,9 +148,23 @@ There are just a few of the implemented model because we wanted to devolop them 
 and Numerical calculus. We strugled to achieve the implementation of new models, but we have been discouraged by the loss of performance in the \textbf{SMT Symmetry Breaking} models,
 so we decided to try to improve as best as possible the basical models.\\
 Another weak point for the \textbf{SAT} is that we can't write a general purpose program in \textbf{SMT2Lib} standard. Indeed, to achieve such a generalization, we need to use
-numerical calculus, not completely available in the \textbf{Propositional Logic}. 
+numerical calculus, not completely available in the \textbf{Propositional Logic}.\\
+
+Another hard point for the \textbf{SAT} modelling was building up the problem. Indeed, we generate a problem building incremental constraints that grows up exponentially with the size of
+the paper sheet, the number of presents and their size, since the \textbf{\textit{``Correct Dimension"}} constraint slide a present over the whole paper sheet. For this reason, it could happen
+that the problem construction takes more time then its resolution. The construction process takes in average from 3 to 15 minutes, but for tiny or small instances the resolution time can be lesser
+than one minute. At the end of day, this can also be acceptable for big instances, where the resolution time is greater than a minute
+\textit{(The given times are measured on the same machine, trying to respect the same conditions)}.
 
 \section{Results}
+During the resolution of the statistics we tried different \textbf{Resolution Strategy} for the Z3 Solver:
+\begin{itemize}
+	\item \texttt{default} strategy
+	\item \texttt{Z3\_mk\_solver}
+	\item \texttt{Z3\_mk\_simple\_solver}
+\end{itemize}
+We found that the most suitable and efficient for our problem is \texttt{Z3\_mk\_simple\_solver} that optimizes the resolution times up to 15\%.
+
 We briefly recap the overall results of the previous models in a textual informative table:
 
 \input{results/sat_final.tex}
