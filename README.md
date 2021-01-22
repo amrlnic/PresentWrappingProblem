@@ -16,6 +16,7 @@
 | `-ni [NO_IMAGES], --no-images [NO_IMAGES]` | `False` | Prevent the generation of the image representation |
 | `-a [ALL_SOLUTIONS], --all-solutions [ALL_SOLUTIONS]` | `False` | Get all the solutions for each instance of the problem |
 | `-s [PRINT_STAT], --print-stat [PRINT_STAT]` | `False` | Print statistics for the first solution |
+| `-t TIME_LIMIT, --time-limit TIME_LIMIT` | `Infinite` | Max time given for solving the instances. Can be in format /\[\[hh:\]mm:\]ss\[.mil\]/. *(**Note:** the effective total time can vary for library imports or runtime side effects)*   |
 
 ### **Suggested Commands:**
 
@@ -50,6 +51,7 @@ The source code is available in two different programming language: through the 
 |:---------|:--------|:------------|
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
 | `--smt-lib` | `False` | True=Uses the smt2-lib standard language, False=Uses python api of z3 |
+| `--verbose` | `Disabled` | The level of verbosity of z3 solver |
 
 ## SAT
 As for SMT language, but since we struggled to implement a generic case of the problem through the SMT2Lib standard, we decided to implement just the python models, stored in the `SAT/src` folder. 
@@ -58,6 +60,7 @@ As for SMT language, but since we struggled to implement a generic case of the p
 | Argument | Default | Description |
 |:---------|:--------|:------------|
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
+| `--verbose` | `Disabled` | The level of verbosity of z3 solver |
 
 ## Statistic
 This is another python program used to run in parallel the solver over the entire set of instances and store in a file the statistics of the resolution for each method.

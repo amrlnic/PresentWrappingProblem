@@ -1,5 +1,5 @@
 class AbstractModel:
-    def __init__(self, instance):
+    def __init__(self, instance, simple=False):
         import z3
         self.backend = z3
         self.instance = instance
@@ -24,11 +24,16 @@ class AbstractModel:
 
         self.rotated = [ z3.Bool(f'rotated_{p}') for p in range(1, self.presents + 1) ]
 
-        self.solver = self.backend.Solver()
+        self.solver = self.backend.SimpleSolver() if simple else self.backend.Solver()
         
-        self.solver.add(*self.get_constraints())
+        self.get_constraints()
+    
+    def add_constraints(self, *constraints):
+        self.solver.add(*constraints)
+        return self
 
-    def solve(self, all_solutions=False):
+    def solve(self, all_solutions=False, time_limit=None):
+        if time_limit is not None: self.solver.set(timeout=time_limit)
         self.instance.clear()
         while True:
             if self.solver.check() == self.backend.sat:
@@ -86,7 +91,7 @@ class AbstractModel:
         p_width, p_height = self.get_dimension_x(present), self.get_dimension_y(present)
         for x0 in range(self.width - p_width + 1):
             for y0 in range(self.height - p_height + 1):
-                constraints += [
+                constraints.append(
                     self.backend.And(*[
                         self.paper[x][y][present]
                             if x in range(x0, x0 + p_width) and y in range(y0, y0 + p_height)
@@ -94,7 +99,7 @@ class AbstractModel:
                             for x in range(0, self.width)
                             for y in range(0, self.height)
                     ])
-                ]
+                )
 
         return self.backend.Or(*constraints)
 
