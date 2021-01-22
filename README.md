@@ -52,6 +52,7 @@ The source code is available in two different programming language: through the 
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
 | `--smt-lib` | `False` | True=Uses the smt2-lib standard language, False=Uses python api of z3 |
 | `--verbose` | `Disabled` | The level of verbosity of z3 solver |
+| `--simple` | `False` | True=Uses the z3 Simple Solver, False=Uses the standard z3 Solver |
 
 ## SAT
 As for SMT language, but since we struggled to implement a generic case of the problem through the SMT2Lib standard, we decided to implement just the python models, stored in the `SAT/src` folder. 
@@ -61,12 +62,21 @@ As for SMT language, but since we struggled to implement a generic case of the p
 |:---------|:--------|:------------|
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
 | `--verbose` | `Disabled` | The level of verbosity of z3 solver |
+| `--simple` | `False` | True=Uses the z3 Simple Solver, False=Uses the standard z3 Solver |
 
-## Statistic
-This is another python program used to run in parallel the solver over the entire set of instances and store in a file the statistics of the resolution for each method.
+# Statistic
+This is another python program used to run in parallel the solvers over the entire set of instances and store in a file the statistics of the resolution for each method.
 
 To run it just run the command:
 
 `python statistics.py`
 
 **WARNING:** This program can take hours! 
+
+### **Arguments:**
+| Argument | Default | Description |
+|:---------|:--------|:------------|
+| `-h, --help` | --- | show help message and exit |
+| `-p PROCESSES, --processes PROCESSES` | `Auto` | Number of processes to spawn *(`Auto` = all cores availables)* |
+| `-o OUTPUT, --output OUTPUT` | `statistics.csv` | Target output file |
+| `-s [SOUND], --sound [SOUND]` | `False` | True=Makes a beep each time a process ends |
