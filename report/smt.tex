@@ -93,7 +93,7 @@ We need to define constraints that are able to give valid instructions to the so
 		)$ 
 	\end{itemize}
 	
-	\begin{figure}
+	\begin{figure}[ht]
 		\centering
 		\includegraphics[width=\textwidth]{overlaps}
 		\caption{Overlapping Model}
@@ -137,7 +137,7 @@ We need to define constraints that are able to give valid instructions to the so
 \section{Symmmetry Model}
 As has already been done for the implementation in CP, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/simple_simmetry.png}
 	\caption{A solution and its symmetry}
@@ -179,7 +179,6 @@ $
 
 \input{results/smt_sym_model.tex}
 
-
 \section{Rotation Model}
 In order to expand our model so that it is possible to rotate a block, thus having further solutions to explore in our problem, we needed to add a new \textit{``rotated"} variable:
 \begin{center}
@@ -212,7 +211,7 @@ Get\_Dimension_y =
 \end{cases}
 $
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/rotated_problem.png}
 	\caption{An instance of the problem that is unsatisfiable without the rotation.}
@@ -224,7 +223,7 @@ $
 \section{Symmetry Rotation Model}
 Following as done in CP, also in SMT we decided to combine the characteristics of the previously implemented models.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/rotated_simmetry.png}
 	\caption{A solution and its symmetry with the rotation relaxation}
@@ -242,7 +241,7 @@ solutions.
 As we did in the CP models, we can model those instances that have presents with the same dimensions. As we modelled the problem,
 the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints to take in account symmterical solutions.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/duplicated_problem.png}
 	\caption{An instance where there is the case of several blocks of the same size}
@@ -282,6 +281,10 @@ During the resolution of the statistics we tried different \textbf{Resolution St
 	\item \texttt{Z3\_mk\_simple\_solver}
 \end{itemize}
 We found that the most suitable and efficient for our problem is \texttt{Z3\_mk\_simple\_solver} that optimizes the resolution times up to 15\%.
+
+We should also take in account that \texttt{Z3} is still in development and has some unexpected behaviours, especially when it boil down to a time matter.
+As many many issues come up, it seems that just by renaming variables the time performance of the solver is influenced \cite{z3issues}.
+Our decision was to show a view of the resolution times as like as these issues do not exist, so we intended them as model dependent.
 
 We briefly recap the overall results of the previous models in a textual informative table:
 

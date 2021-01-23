@@ -46,7 +46,7 @@ Indeed, we loose all the variables of the precedent model, and we use a new tens
 The $Paper$ tensor has two dimensions for indicating the present position and one dimension indicating the present index. In this way
 we know that the i-th present will occupy the cell in the coordinates x, y if the boolean value of the $tensor[x, y, i]$ is true.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/SAT_cube.png}
 	\caption{An instance solved with our SAT implementation.}
@@ -162,6 +162,10 @@ the paper sheet, the number of presents and their size, since the \textbf{\texti
 that the problem construction takes more time then its resolution. The construction process takes in average from 3 to 15 minutes, but for tiny or small instances the resolution time can be lesser
 than one minute. At the end of day, this can also be acceptable for big instances, where the resolution time is greater than a minute
 \textit{(The given times are measured on the same machine, trying to respect the same conditions)}.
+
+We should also take in account that \texttt{Z3} is still in development and has some unexpected behaviours, especially when it boil down to a time matter.
+As many many issues come up, it seems that just by renaming variables the time performance of the solver is influenced \cite{z3issues}.
+Our decision was to show a view of the resolution times as like as these issues do not exist, so we intended them as model dependent.
 
 \section{Results}
 During the resolution of the statistics we tried different \textbf{Resolution Strategy} for the Z3 Solver:

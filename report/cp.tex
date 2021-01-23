@@ -87,7 +87,7 @@ in order to instruct the way to find a solution to the solver. The constraints a
                 )$ 
         \end{itemize}
 
-        \begin{figure}
+        \begin{figure}[ht]
             \centering
             \includegraphics[width=\textwidth]{overlaps}
             \caption{Overlapping Model}
@@ -173,15 +173,12 @@ domains and the more effective will be its placement in the first stages. So the
 found so far for this kind of problem is to sort the presents in size order, placing the bigger first and the
 smaller last \cite{binpack, algdesign}.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/simple_simmetry.png}
 	\caption{A solution and its symmetry}
 	\label{fig:overlaps}
 \end{figure}
-
-
-\input{results/cp_sym_model.tex}
 
 Doing this requires a new extracted parameter:
 
@@ -222,17 +219,17 @@ By doing this we can exclude all the possible symmetries due to the swap of diff
 Excluding the symmetrical solutions allow us to exclude also the symmetrical part of the search tree that are unsatisfiable, just
 by finding an unsatisfiable combination out of the all simmetricals.
 
+\input{results/cp_sym_model.tex}
+
 \section{Rotation Model}
 In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/rotated_problem.png}
 	\caption{An instance of the problem that is unsatisfiable without the rotation.}
 	\label{fig:overlaps}
 \end{figure}
-
-\input{results/cp_sym_model.tex}
 
 The rotation model can overwhelm this problem because it looks for any combination of rotated presents over the paper sheet, so we don't need to specify the right combination
 of dimensions that can fit the paper. In order to do this, we need another variable in our description:
@@ -280,7 +277,7 @@ As we growth the model in modules, we can just combine the \textbf{Symmetry Mode
 with a \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
 solutions.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/rotated_simmetry.png}
 	\caption{A solution and its symmetry with the rotation relaxation}
@@ -294,7 +291,7 @@ Another point to take in account, is the possibility of the presence of presents
 the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints in order to exploit the \textbf{Symmetry Breaking}
 even in these cases.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/duplicated_problem.png}
 	\caption{An instance where there is the case of several blocks of the same size}
@@ -352,7 +349,8 @@ efficient in terms of time, during the resolution of big size problems.
 As MiniZinc is an high level interface for many solver, we tryied different solver configurations in order to understand which one performs better
 in our problem. The standard \texttt{Geocode} solver resulted well suitable for any given instance, but we found out that the best solver, in particular
 for the bigger instances, was the \texttt{Chuffed} solver. The latter indeede exploit some \textbf{SAT} techniques to better explore and learn wrong or symmetric
-pattern in the search space in order to prevent the exploration of useles nodes and branches.\\
+pattern in the search space in order to prevent the exploration of useles nodes and branches. Even if the \texttt{Chuffed} solver was the best performant,
+indeed it reduces the number of propagations and nodes, other than the elasped time, but it makes less effective the most complex models.\\ 
 
 We briefly recap the overall results of the previous models in a textual informative table:
 
