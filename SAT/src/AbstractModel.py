@@ -22,7 +22,7 @@ class AbstractModel:
             ] for x in range(1, self.width + 1) 
         ]
 
-        self.rotated = [ z3.Bool(f'rotated_{p}') for p in range(1, self.presents + 1) ]
+        self.rotated = [ self.backend.Bool(f'rotated_{p}') for p in range(1, self.presents + 1) ]
 
         self.solver = self.backend.SimpleSolver() if simple else self.backend.Solver()
         

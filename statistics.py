@@ -1,6 +1,6 @@
 def get_execution_time(args):
     method_name, method, model, instance_name, instance = args
-    method_args = { 'instance': instance, 'model': model }
+    method_args = { 'instance': instance, 'model': model, 'time_limit': 7200000 }
     if method_name == 'SMT': method_args['smt_lib'] = True
     if method_name in 'SAT SMT': method_args['simple'] = True
     method(**method_args)
