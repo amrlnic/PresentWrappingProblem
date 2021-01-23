@@ -72,7 +72,7 @@ if len(sys.argv) > 1:
                 print(f'{method} - {model} - {instance}')
                 table += f'\t\t{instance_name} & ? & ? & ?{other_column.replace("-", "?")} \\\\ \\hline\n'
             elif stat['sat'] != 'true': table += f'\t\t{instance_name} & - & - & -{other_column} \\\\ \\hline\n'
-            elif float(stat['time']) < 0: table += f'\t\t{instance_name} & Max Time Elasped & ? & ? & ?{other_column.replace("-", "?")} \\\\ \\hline\n'
+            elif float(stat['time']) < 0: table += f'\t\t{instance_name} & \\multicolumn{{{4 if with_mem else 3}}}{{|c|}}{{Time $>$ 10h - Max Time Elasped}} \\\\ \\hline\n'
             elif with_mem: table += f'\t\t{instance_name} & {format_time(stat["time"])} & {int(stat["nodes"]):,d} & {int(stat["propagations"]):,d} & {int(float(stat["memory"]) * 1000):,d} \\\\ \\hline\n'
             else: table += f'\t\t{instance_name} & {format_time(stat["time"])} & {int(stat["nodes"]):,d} & {int(stat["propagations"]):,d} \\\\ \\hline\n'
 

@@ -50,7 +50,7 @@ The source code is available in two different programming language: through the 
 | Argument | Default | Description |
 |:---------|:--------|:------------|
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
-| `--smt-lib` | `False` | True=Uses the smt2-lib standard language, False=Uses python api of z3 |
+| `--backend {fast,smt,python}` | `fast` | The backend used to build the problem: smt - loads a predefined smt-lib template; python - uses z3 python api; fast - generate smt-lib code from z3 python api and load it to the solver. |
 | `--verbose` | `Disabled` | The level of verbosity of z3 solver |
 | `--simple` | `False` | True=Uses the z3 Simple Solver, False=Uses the standard z3 Solver |
 
@@ -61,6 +61,7 @@ As for SMT language, but since we struggled to implement a generic case of the p
 | Argument | Default | Description |
 |:---------|:--------|:------------|
 | `--model` | `base_model` | The model to be used in order to build the problem for the solver |
+| `--backend {fast,python}` | `fast` | The backend used to build the problem: python - uses z3 python api; fast - generate smt-lib code from z3 python api and load it to the solver. |
 | `--verbose` | `Disabled` | The level of verbosity of z3 solver |
 | `--simple` | `False` | True=Uses the z3 Simple Solver, False=Uses the standard z3 Solver |
 
