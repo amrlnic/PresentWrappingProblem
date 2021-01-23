@@ -4,7 +4,7 @@ simpler and simpler parts that take in account just one or few aspects of the pr
 When we can control those aspect with a certain amount of reliability, we can mix different parts in order to
 ensure that the superposition of those effects behaves as expected.
 In this way we can build incremental models, that solve the problem by looking and optimizing a certain aspect
-if the problem. 
+of the problem. 
 
 \section{Base Model}
 The \textbf{Base Model} is the most basic, where we defined our problem view, such as the parameters and the variables,
@@ -58,7 +58,7 @@ in order to instruct the way to find a solution to the solver. The constraints a
     \item \textbf{\textit{The presents must fit into the Paper Sheet:}}
         \begin{itemize}
             \item[] A present fits in the paper if its coordinates are strictly positive
-                and its coorinates summed with its corresponding dimensions are lesser then
+                and its coordinates summed with its corresponding dimensions are lesser then
                 the Paper Sheet dimensions.
             \item[] The resultant constraint is:
             \begin{adjustwidth}{-3cm}{}\begin{equation*}
@@ -113,7 +113,7 @@ in order to instruct the way to find a solution to the solver. The constraints a
                 feasible: if the total areas does not match we can say the problem is unsatisfiable.
             \item[] A further relaxation of this constraint is to use $\leq$ instead of $=$ in order 
                 to keep instances where we have presents that do not completely fill the Paper Sheet. 
-                We kept the strict constraint for efficency reason, because the given instances all fall
+                We kept the strict constraint for efficiency reason, because the given instances all fall
                 in this case.
         \end{itemize}
     \newpage
@@ -148,9 +148,9 @@ in order to instruct the way to find a solution to the solver. The constraints a
 \subsection{Search Methods}
 All of the constraints we described so far could solve the given instances with the \textit{Geocode} solver,
 but the main difficulty is the time spent in the resolution. Some instances can take more then 10 minutes.
-To lower the elasped time, we can tell to the solver how to optimize the search on the variables:
+To lower the elapsed time, we can tell to the solver how to optimize the search on the variables:
 \begin{itemize}
-    \item We decided to choose a preferential axes for the search. The X axis was choosen.
+    \item We decided to choose a preferential axes for the search. The X axis was chosen.
     \item Each axis then can be explored in different ways. We want to explore it with the most difficult case
         as we already know that some presents configurations can exclude a priori the placement of other presents.
         In this way we selected the \textit{\textbf{first\_fail}} search parameter, that chooses the variable with
@@ -162,7 +162,7 @@ To lower the elasped time, we can tell to the solver how to optimize the search 
         description has coordinates of each presents in their lower left corner, so we try to assign first the lesser
         available coordinates, then the bigger one. The \textit{\textbf{indomain\_min}} search parameter try to assign
         to each variable the minimum value available in the current domain.
-    \item The final search annotiation is:
+    \item The final search annotation is:
     \begin{lstlisting}
 seq_search([
     int_search(Coord_X, first_fail, indomain_min),
@@ -179,7 +179,7 @@ this setup because it resulted the most performant.
 \newpage
 \section{Symmetry Model}
 We had further analysed the problem in order to understand if, from an erroneous solution,
-there are similar solutions that we can deduce as unsatisfiable as they are permutation or simmetrical of the
+there are similar solutions that we can deduce as unsatisfiable as they are permutation or symmetrical of the
 erroneous one. This technique is called \textbf{Symmetry Breaking}.\\
 The \textbf{Present Wrapping Problem} \cite{project} is an extension of the \textbf{2D Bin Packing Problem},
 and one of the most effective heuristic to place presents is to choose those that are more restricting for the others,
@@ -225,21 +225,21 @@ Then we want to place the bigger presents in the left-bottom most part of the pa
 the others:
 \begin{equation*}\begin{split}
     &\forall i, j \in [1, Presents], j > i \rightarrow\\
-    &\eqindent Coord_y[Sorted\_Areas_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
-    &\eqindent \eqindent Coord_x[Sorted\_Areas_Indexes[i]] < Coord_x[Sorted\_Areas\_Indexes[j]]
+    &\eqindent Coord_y[Sorted\_Areas\_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
+    &\eqindent \eqindent Coord_x[Sorted\_Areas\_Indexes[i]] < Coord_x[Sorted\_Areas\_Indexes[j]]
 \end{split}\end{equation*}
 
 This, in combination with the search method, provides that the bigger present will be then the lesser will be its coordinate x,
 and since the bigger the present, the smaller is its domain, it will be also placed first, that means in the lower y possible.
 By doing this we can exclude all the possible symmetries due to the swap of different area presents.\\
 Excluding the symmetrical solutions allow us to exclude also the symmetrical part of the search tree that are unsatisfiable, just
-by finding an unsatisfiable combination out of the all simmetricals.
+by finding an unsatisfiable combination out of the all symmetrical ones.
 
 \input{results/cp_sym_model.tex}
 
 \newpage
 \section{Rotation Model}
-In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
+In a real life case we just know the two dimensions of each present we want to place, but we don't know in which order they should appear such that we can fit the paper sheet.
 
 \begin{figure}[ht]
 	\centering
@@ -316,13 +316,13 @@ even in these cases.
 	\label{fig:overlaps}
 \end{figure}
 
-The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
+The simplest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
 coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:
 
 \begin{equation*}\begin{split}
     &\forall i, j \in [1, Presents], j > i \rightarrow \\
-    &\eqindent Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \wedge \\
-    &\eqindent Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \wedge \\
+    &\eqindent Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \lor \\
+    &\eqindent Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \lor\\
     &\eqindent Coord_y[Sorted\_Areas\_Indexes[i]] \leq Coord_y[Sorted\_Areas\_Indexes[j]]
 \end{split}\end{equation*}
 
@@ -334,9 +334,9 @@ presents will appear in near positions in that array, while they could appear in
 
 \newpage
 \section{Duplicated Symmetry Rotation Model}
-The modularity of our model eassily achieves a new model that takes in account all the discussed properties of the problem
+The modularity of our model easily achieves a new model that takes in account all the discussed properties of the problem
 \textit{(Symmetry, Rotation, Duplicated Presents)} at once, just by combining the constraints of all the precedent models.
-The results show that this model achieve the best performance, as the number of errors and the quantity of the explorated nodes in the
+The results show that this model achieve the best performance, as the number of errors and the quantity of the explored nodes in the
 search tree drastically decrease.  
 
 \input{results/cp_dup_rot_sym_model.tex}
@@ -349,16 +349,16 @@ For the study case, we choose to try to implement our constraints through the al
     \item The \texttt{overlaps} predicate can well be substituted by the \texttt{diffn} global constraint.
             Furthermore, the latter can work directly on arrays so the new constraint will be just one line of code:
     \item[] \verb|diffn(Coord_X, Coord_Y, Dimension_X, Dimension_Y)|
-    \item The \textit{fit row/col} constriants can be substituted by the \texttt{cumulative} global constraint:
-    \item[] Rows: \verb|cumulative(Coord_X, Dimension_X, Dimension_y, Height)|
+    \item The \textit{fit row/col} constraints can be substituted by the \texttt{cumulative} global constraint:
+    \item[] Rows: \verb|cumulative(Coord_X, Dimension_X, Dimension_Y, Height)|
     \item[] Cols: \verb|cumulative(Coord_Y, Dimension_Y, Dimension_X, Width)|
-    \item[] Unluckly this global constraint was thought for task scheduling problems, so the performance result are not so good at all.
+    \item[] Unluckily this global constraint was thought for task scheduling problems, so the performance result are not so good at all.
     \item The Duplicated \textbf{Symmetry Breaking} constraint can also be replaced by the \texttt{lexlesseq} global constraint:
     \item[] \verb|lexlesseq(Sorted_Areas_Coord_Y, Coord_Y)|
     \item[] With \verb|Sorted_Areas_Coord_Y| is the array of $Coord_y$ accessed with the indexes of the $Sorted\_Areas\_Indexes$ array.   
 \end{itemize}
 
-At the end, we choosed to stuck with our implementation because it was well optimized for this kind of problem, and results to be more
+At the end, we chose to stuck with our implementation because it was well optimized for this kind of problem, and results to be more
 efficient in terms of time, during the resolution of big size problems.
 
 \input{results/cp_base_global_model.tex}
@@ -366,10 +366,10 @@ efficient in terms of time, during the resolution of big size problems.
 
 \newpage
 \section{Remarks and Results}
-As MiniZinc is an high level interface for many solver, we tryied different solver configurations in order to understand which one performs better
+As MiniZinc is an high level interface for many solver, we tried different solver configurations in order to understand which one performs better
 in our problem. The standard \texttt{Geocode} solver resulted well suitable for any given instance, but we found out that the best solver, in particular
-for the bigger instances, was the \texttt{Chuffed} solver. The latter indeede exploit some \textbf{SAT} techniques to better explore and learn wrong or symmetric
-pattern in the search space in order to prevent the exploration of useles nodes and branches. Even if the \texttt{Chuffed} solver was the best performant,
+for the bigger instances, was the \texttt{Chuffed} solver. The latter indeed exploit some \textbf{SAT} techniques to better explore and learn wrong or symmetric
+pattern in the search space in order to prevent the exploration of useless nodes and branches. Even if the \texttt{Chuffed} solver was the best performant,
 indeed it reduces the number of propagations and nodes, other than the elasped time, but it makes less effective the most complex models.\\ 
 
 We briefly recap the overall results of the previous models in a textual informative table:

@@ -118,7 +118,7 @@ We need to define constraints that are able to give valid instructions to the so
 		\item[] Thanks to this constraint we can understand from the beginning of the search if the given instance is feasible or not: in this way we can avoid the search a priori and avoid a waste of resources in case of unfeasibility.	
 		\item[] A further relaxation of this constraint is to use $\leq$ instead of $=$ in order 
 		to keep instances where we have presents that do not completely fill the Paper Sheet.  
-		We kept the strict constraint for efficency reason, because the given instances all fall
+		We kept the strict constraint for efficiency reason, because the given instances all fall
 		in this case.
 	\end{itemize}
 	\item \textbf{\textit{The presents must fill the row (column) dimension:}}
@@ -149,7 +149,7 @@ We need to define constraints that are able to give valid instructions to the so
 \input{results/smt_base_model.tex}
 
 \newpage
-\section{Symmmetry Model}
+\section{Symmetry Model}
 As has already been done for the implementation in \textbf{CP}, also here we have decided to apply a similar method of \textbf{symmetry breaking} to remove rotated or mirrored solutions. To do this we used the heuristic to select the most voluminous presents (in this case we intend those with the largest area) first and place them in the lowest-left available place \cite{binpack, algdesign}. This allows us to always work in the lower left quadrant so as to avoid specular solutions that differ only from the reference quadrant.
 
 \begin{figure}[ht]
@@ -254,7 +254,7 @@ solutions.
 \newpage
 \section{Duplicated Symmetry Model}
 As we did in the \textbf{CP} models, we can model those instances that have presents with the same dimensions. As we modelled the problem,
-the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints to take in account symmterical solutions.
+the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints to take in account symmetrical solutions.
 
 \begin{figure}[ht]
 	\centering
@@ -263,13 +263,13 @@ the \textbf{Base Model} can already solve this kind of instances, but we can add
 	\label{fig:overlaps}
 \end{figure}
 
-The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
+The simplest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
 coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:\\
 
 \begin{equation*}\begin{split}
     &\forall i, j \in [1, Presents], j > i \rightarrow \\
-    &\eqindent Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \wedge \\
-    &\eqindent Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \wedge \\
+    &\eqindent Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \lor \\
+    &\eqindent Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \lor \\
     &\eqindent Coord_y[Sorted\_Areas\_Indexes[i]] \leq Coord_y[Sorted\_Areas\_Indexes[j]]
 \end{split}\end{equation*}
 
@@ -299,7 +299,7 @@ During the resolution of the statistics we tried different \textbf{Resolution St
 We found that the most suitable and efficient for our problem is \texttt{Z3\_mk\_simple\_solver} that optimizes the resolution times up to 15\%.
 
 We should also take in account that \texttt{Z3} is still in development and has some unexpected behaviours, especially when it boil down to a time matter.
-As many many issues come up, it seems that just by renaming variables the time performance of the solver is influenced \cite{z3issues}.
+As many issues come up, it seems that just by renaming variables the time performance of the solver is influenced \cite{z3issues}.
 Our decision was to show a view of the resolution times as like as these issues do not exist, so we intended them as model dependent.
 
 We briefly recap the overall results of the previous models in a textual informative table:
