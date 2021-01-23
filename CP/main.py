@@ -45,7 +45,7 @@ def main(instance, all_solutions=False, model='dup_rot_sym_model', solver='chuff
                 free_search=not no_free_search,
                 optimisation_level=optimization,
                 all_solutions=all_solutions
-            ), timeout=float(time_limit) / 1000)
+            ), timeout=float(time_limit) / 1000 if time_limit is not None else None)
         except asyncio.TimeoutError: pass
     
     results = resolve(resolve_coroutine())

@@ -90,7 +90,7 @@ if __name__ == '__main__':
                     'time': stats['solveTime'].total_seconds(),
                     'nodes': stats['nodes'],
                     'propagations': stats['propagations'],
-                    'memory': stats['peakMem'],
+                    'memory': stats.get('peakMem', 0.0),
                 })
             else:
                 print({

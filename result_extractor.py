@@ -51,7 +51,7 @@ if len(sys.argv) > 1:
             else: special_name = ' Rotation Model'
         
         with_mem = method != 'cp'
-        text_bf_mem = '& \\textbf{Memory} ' if with_mem else ''
+        text_bf_mem = '& \\textbf{Memory \\textit{[KB]}} ' if with_mem else ''
         table = f'''
 \\begin{{center}}
     \\begin{{tabular}}{{|c|c|r|r|{'r|' if with_mem else ''}}}
@@ -68,9 +68,11 @@ if len(sys.argv) > 1:
         for instance in instances:
             stat = find(stats, instance)
             instance_name = instance.replace('_', '\\_')
-            if stat is None or stat['sat'] != 'true':
-                if stat is None: print(f'{method} - {model} - {instance}')
-                table += f'\t\t{instance_name} & - & - & -{other_column} \\\\ \\hline\n'
+            if stat is None:
+                print(f'{method} - {model} - {instance}')
+                table += f'\t\t{instance_name} & ? & ? & ?{other_column.replace("-", "?")} \\\\ \\hline\n'
+            elif stat['sat'] != 'true': table += f'\t\t{instance_name} & - & - & -{other_column} \\\\ \\hline\n'
+            elif float(stat['time']) < 0: table += f'\t\t{instance_name} & Max Time Elasped & ? & ? & ?{other_column.replace("-", "?")} \\\\ \\hline\n'
             elif with_mem: table += f'\t\t{instance_name} & {format_time(stat["time"])} & {int(stat["nodes"]):,d} & {int(stat["propagations"]):,d} & {int(float(stat["memory"]) * 1000):,d} \\\\ \\hline\n'
             else: table += f'\t\t{instance_name} & {format_time(stat["time"])} & {int(stat["nodes"]):,d} & {int(stat["propagations"]):,d} \\\\ \\hline\n'
 
