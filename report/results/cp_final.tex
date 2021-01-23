@@ -1,9 +1,19 @@
 \begin{center}
-    \begin{tabular}{|c|c|c|c|c|}
-        \hline
-        \multicolumn{5}{|c|}{\textbf{Global Results}} \\
-        \hline
-        \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
-        \hline
-    \end{tabular}
+    \begin{adjustwidth}{-2.5cm}{}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
+            \hline
+            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
+            \hline
+            Base Model & \vhighval & \ilowval & Very simple model & \makecell{Does not exploit symmetries and\\does not allow rotations} \\ \hline
+            Symmetry Model & \highval & \imedval & Symmetries & Exploits Symmetry Breaking \\ \hline
+            Rotation Model & \medval & \imedval & Dimensions Proxy & \makecell{Huge search space\\\textit{(new dimension)}} \\ \hline
+            \makecell{Rotation Symmetry\\Model} & \medval & \imedval & \makecell{Symmetries with\\Rotations} & \makecell{Still big search space} \\ \hline
+            \makecell{Duplicated Symmetry\\Model} & \highval & \imedval & Same sized presents & \makecell{Not well suited for\\\texttt{Chuffed} solver} \\ \hline
+            \makecell{Duplicated Symmetry\\Rotation Model} & \medval & \ihighval & \makecell{Symmetries with\\Rotations and same\\sized presents} & \makecell{Still big search space} \\ \hline
+            Base Global Model & \lowval & \ivlowval & \makecell{Uses global\\constraints} & \makecell{It is not well suited for our problem\\\textit{(In particular for \texttt{Chuffed})}} \\ \hline
+            \makecell{Rotation Global\\Model} & \vlowval & \ilowval & \makecell{Uses global\\constraints} & \makecell{Very unefficient and not well\\suited for our problem\\\textit{(In particular for \texttt{Chuffed})}} \\ \hline
+        \end{tabular}
+    \end{adjustwidth}
 \end{center}

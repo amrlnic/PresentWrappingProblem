@@ -61,7 +61,11 @@ in order to instruct the way to find a solution to the solver. The constraints a
                 and its coorinates summed with its corresponding dimensions are lesser then
                 the Paper Sheet dimensions.
             \item[] The resultant constraint is:
-            \item[] $\forall i \in [1, Presents] \rightarrow\\(Coord_x[i] + Dimension_x[i] \leq Width + 1) \wedge \\ (Coord_y[i] + Dimension_y[i] \leq Height + 1)$  
+            \begin{adjustwidth}{-3cm}{}\begin{equation*}
+                \forall i \in [1, Presents] \rightarrow
+                (Coord_x[i] + Dimension_x[i] \leq Width + 1) \wedge
+                (Coord_y[i] + Dimension_y[i] \leq Height + 1)
+            \end{equation*}\end{adjustwidth} 
             \item[] \textit{As we used indexes starting from 1, we must add 1 to the right side of both disequations} 
         \end{itemize}
 
@@ -70,21 +74,23 @@ in order to instruct the way to find a solution to the solver. The constraints a
             \item[] Given the two rectangles of two different presents, we can check if they have
                 at least one part in common, just by checking their corners. So, we defined the
                 \textit{overlaps} predicate:
-            \item[] $overlaps(
-                Left^1_x, Right^1_x, Left^1_y, Right^1_y,
-                Left^2_x, Right^2_x, Left^2_y, Right^2_y
-                ) \leftrightarrow
-                \neg (Left^1_x \geq Right^2_x \vee Left^2_x \geq Right^1_x) \wedge\\
-                \neg (Right^1_y \leq Left^2_y \vee Right^2_y \leq Left^1_y)$
+            \begin{adjustwidth}{-3cm}{}\begin{equation*}\begin{split}
+                overlaps(
+                    Left^1_x, Right^1_x, Left^1_y, Right^1_y,
+                    Left^2_x, Right^2_x, Left^2_y, Right^2_y
+                ) \leftrightarrow \\
+                \neg (Left^1_x \geq Right^2_x \vee Left^2_x \geq Right^1_x) \wedge 
+                \neg (Right^1_y \leq Left^2_y \vee Right^2_y \leq Left^1_y)
+            \end{split}\end{equation*}\end{adjustwidth}
             \item[] Each present is described as the rectangle:
             \item[] $Left^i_x, Left^i_y, Right^i_x, Right^i_y$
             \item[] So we can constraint each couple of presents to not overlaps one to each other:
-            \item[] $
-            \forall i, j \in [1, Presents], j > i \rightarrow\\
-                \neg overlaps(\\
-                    Coord_x[i], Coord_x[i] + Dimension_x[i], Coord_y[i], Coord_y[i] + Dimension_y[i],\\
-                    Coord_x[j], Coord_x[j] + Dimension_x[j], Coord_y[j], Coord_y[j] + Dimension_y[j]\\
-                )$ 
+            \begin{adjustwidth}{-2.8cm}{}\begin{equation*}\begin{split}
+                &\forall i, j \in [1, Presents], j > i \rightarrow \neg overlaps(\\
+                &\eqindent Coord_x[i], Coord_x[i] + Dimension_x[i], Coord_y[i], Coord_y[i] + Dimension_y[i],\\
+                &\eqindent Coord_x[j], Coord_x[j] + Dimension_x[j], Coord_y[j], Coord_y[j] + Dimension_y[j]\\
+                &)
+            \end{split}\end{equation*}\end{adjustwidth}
         \end{itemize}
 
         \begin{figure}[ht]
@@ -93,7 +99,7 @@ in order to instruct the way to find a solution to the solver. The constraints a
             \caption{Overlapping Model}
             \label{fig:overlaps}
         \end{figure}
-
+    \newpage
     \item[] \textbf{Additional Constraints}
     \item[] These constraint are not essential to solve the general formulation of this problem,
         but they results helpful as they restrict the search space in the given instances.
@@ -110,29 +116,35 @@ in order to instruct the way to find a solution to the solver. The constraints a
                 We kept the strict constraint for efficency reason, because the given instances all fall
                 in this case.
         \end{itemize}
+    \newpage
     \item \textbf{\textit{The presents must fill the row (column) dimension:}}
         \begin{itemize}
             \item[] As an extension of the previous constraint, we want to use each row \textit{(or column)}
                 such that we use all of the available area of the paper.
             \item[] Drawing a vertical \textit{(horizontal)} line and summing up the encountered
                 presents dimensions we must end up with the same dimension of the Paper Sheet:
-            \item[] Rows: $
-                \forall y \in [1, Height] \rightarrow\\ \sum_{i = 1}^{Presents}{
+            \item[] Rows:
+            \begin{adjustwidth}{-3.3cm}{}\begin{equation*}
+                \forall y \in [1, Height] \rightarrow (\sum_{i = 1}^{Presents}{
                     \begin{cases}
-                    Dimension_x[i] & \text{if } y \geq Coord_y[i] \wedge y < Coord_y[i] + Dimension_y[i] \\
-                    0 & \text{otherwise}
+                        Dimension_x[i] & \text{if } y \geq Coord_y[i] \wedge y < Coord_y[i] + Dimension_y[i] \\
+                        0 & \text{otherwise}
                     \end{cases}
-                    }\\= Width$
-            \item[] Columns: $
-                \forall x \in [1, Width] \rightarrow\\ \sum_{i = 1}^{Presents}{
+                }) = Width
+            \end{equation*}\end{adjustwidth}
+            \item[] Columns:
+            \begin{adjustwidth}{-3.3cm}{}\begin{equation*} 
+                \forall x \in [1, Width] \rightarrow (\sum_{i = 1}^{Presents}{
                     \begin{cases}
-                    Dimension_y[i] & \text{if } x \geq Coord_x[i] \wedge x < Coord_x[i] + Dimension_x[i] \\
-                    0 & \text{otherwise}
+                        Dimension_y[i] & \text{if } x \geq Coord_x[i] \wedge x < Coord_x[i] + Dimension_x[i] \\
+                        0 & \text{otherwise}
                     \end{cases}
-                    }\\= Height$
+                }) = Height
+            \end{equation*}\end{adjustwidth}
         \end{itemize}
 \end{itemize}
 
+\newpage
 \subsection{Search Methods}
 All of the constraints we described so far could solve the given instances with the \textit{Geocode} solver,
 but the main difficulty is the time spent in the resolution. Some instances can take more then 10 minutes.
@@ -151,10 +163,12 @@ To lower the elasped time, we can tell to the solver how to optimize the search 
         available coordinates, then the bigger one. The \textit{\textbf{indomain\_min}} search parameter try to assign
         to each variable the minimum value available in the current domain.
     \item The final search annotiation is:
-    \item[] $seq\_search([\\
-            \text{\ \ \ \ }int\_search(Coord\_X, first\_fail, indomain\_min),\\
-            \text{\ \ \ \ }int\_search(Coord\_Y, first\_fail, indomain\_min)\\
-        ])$
+    \begin{lstlisting}
+seq_search([
+    int_search(Coord_X, first_fail, indomain_min),
+    int_search(Coord_Y, first_fail, indomain_min)
+]);
+    \end{lstlisting}
 \end{itemize} 
 
 We also tried any combination of all the possible parameters in order to confirm our reasoning, so we end up by choosing
@@ -162,6 +176,7 @@ this setup because it resulted the most performant.
 
 \input{results/cp_base_model.tex}
 
+\newpage
 \section{Symmetry Model}
 We had further analysed the problem in order to understand if, from an erroneous solution,
 there are similar solutions that we can deduce as unsatisfiable as they are permutation or simmetrical of the
@@ -198,6 +213,7 @@ Doing this requires a new extracted parameter:
 
 This new parameter stores the indexes of the sorted areas, so the $Sorted\_Areas\_Indexes[1]$ will store the indexes of the present with
 the maximum area, $Sorted\_Areas\_Indexes[2]$ the index of the second present with maximum area and so on.\\
+\newpage
 Now the most basic constraint we can add is that the biggest present will always stay on the minimal coordinates:\\
 $
 Coord\_X[Sorted\_Areas\_Indexes[1]] = 1\\
@@ -206,13 +222,13 @@ $
 \\
 
 Then we want to place the bigger presents in the left-bottom most part of the paper, simulating the fact that we are placing them before
-the others:\\
-$
-\forall i, j \in [1, Presents], j > i \rightarrow \\
-    Coord_y[Sorted\_Areas_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
-    Coord_x[Sorted\_Areas_Indexes[i]] < Coord_x[Sorted\_Areas\_Indexes[j]]
-$
-\\
+the others:
+\begin{equation*}\begin{split}
+    &\forall i, j \in [1, Presents], j > i \rightarrow\\
+    &\eqindent Coord_y[Sorted\_Areas_Indexes[i]] = Coord_y[Sorted\_Areas\_Indexes[j]] \rightarrow \\
+    &\eqindent \eqindent Coord_x[Sorted\_Areas_Indexes[i]] < Coord_x[Sorted\_Areas\_Indexes[j]]
+\end{split}\end{equation*}
+
 This, in combination with the search method, provides that the bigger present will be then the lesser will be its coordinate x,
 and since the bigger the present, the smaller is its domain, it will be also placed first, that means in the lower y possible.
 By doing this we can exclude all the possible symmetries due to the swap of different area presents.\\
@@ -221,6 +237,7 @@ by finding an unsatisfiable combination out of the all simmetricals.
 
 \input{results/cp_sym_model.tex}
 
+\newpage
 \section{Rotation Model}
 In a real life case we just know the two dimensions of each present we want to place, but we dont know in which order they should appear such that we can fit the paper sheet.
 
@@ -235,6 +252,7 @@ The rotation model can overwhelm this problem because it looks for any combinati
 of dimensions that can fit the paper. In order to do this, we need another variable in our description:
 
 \begin{center}
+    \begin{adjustwidth}{-0.5cm}{}
 		\begin{tabular}{|c|c|}
 			\hline
 			\multicolumn{2}{|c|}{\textbf{Variables}} \\
@@ -244,6 +262,7 @@ of dimensions that can fit the paper. In order to do this, we need another varia
 			Rotated & The boolean array that indicates whether a present is rotated or not \\
 			\hline
 		\end{tabular}
+    \end{adjustwidth}
 \end{center}
 
 This variable keep trace of the rotation of the present. Keep in mind that in a discretized space, we can rotate a rectangular present just in two direction: $0\deg$ or $90\deg$.
@@ -251,27 +270,25 @@ Indeed if we further rotate the present, $180\deg$ for example, we end up with t
 Thanks to their regularity of the geometric shape of the presents there are only two conditions of rotation, described by the inversion of the two dimensions.
 To keep the problem description as simple as possible, we can just create a proxy function that returns the correct dimension depending on its rotation.
 So if the present is not rotated, it return the right dimension, otherwise it will return the opposite dimension:\\
-$
-Get\_Dimension_x = 
-\begin{cases}
-	Dimension_y & \text{if } Rotated \\
-	Dimension_x & \text{otherwise}
-\end{cases}
-$
-\\
-$
-Get\_Dimension_y = 
-\begin{cases}
-	Dimension_x & \text{if } Rotated \\
-	Dimension_y & \text{otherwise}
-\end{cases}
-$
+\begin{equation*}\begin{split}
+    Get\_Dimension_x = 
+    \begin{cases}
+        Dimension_y & \text{if } Rotated \\
+        Dimension_x & \text{otherwise}
+    \end{cases} \\
+    Get\_Dimension_y = 
+    \begin{cases}
+        Dimension_x & \text{if } Rotated \\
+        Dimension_y & \text{otherwise}
+    \end{cases}
+\end{split}\end{equation*}
 
 Now, we can change any constraint that involves a dimension variable with the corresponding proxy.
 In this way we obtained a model that can solve instances of the problem that are satisfiable only if we rotate one \textit{(or more)} present.
 
 \input{results/cp_rot_model.tex}
 
+\newpage
 \section{Symmetry Rotation Model}
 As we growth the model in modules, we can just combine the \textbf{Symmetry Model} with the \textbf{Rotation Model} and we end up
 with a \textbf{Symmetry Rotation Model} that takes in account the possibility of the presents rotation and also excludes the symmetrical
@@ -286,6 +303,7 @@ solutions.
 
 \input{results/cp_rot_sym_model.tex}
 
+\newpage
 \section{Duplicated Symmetry Model}
 Another point to take in account, is the possibility of the presence of presents that have the same size. As we modelled the problem,
 the \textbf{Base Model} can already solve this kind of instances, but we can add some constraints in order to exploit the \textbf{Symmetry Breaking}
@@ -299,14 +317,14 @@ even in these cases.
 \end{figure}
 
 The simpliest approach is to force the same size presents to be placed in the order they appear. In this way we put in the lesser
-coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:\\
+coordinates the presents that are in the first positions of the parameter $Dimension_X$ and $Dimension_y$ arrays:
 
-$
-\forall i, j \in [1, Presents], j > i \rightarrow \\
-    Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \wedge \\
-    Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \wedge \\
-    Coord_y[Sorted\_Areas\_Indexes[i]] \leq Coord_y[Sorted\_Areas\_Indexes[j]]
-$
+\begin{equation*}\begin{split}
+    &\forall i, j \in [1, Presents], j > i \rightarrow \\
+    &\eqindent Dimension_x[Sorted\_Areas\_Indexes[i]] \neq Dimension_x[Sorted\_Areas\_Indexes[j]] \wedge \\
+    &\eqindent Dimension_y[Sorted\_Areas\_Indexes[i]] \neq Dimension_y[Sorted\_Areas\_Indexes[j]] \wedge \\
+    &\eqindent Coord_y[Sorted\_Areas\_Indexes[i]] \leq Coord_y[Sorted\_Areas\_Indexes[j]]
+\end{split}\end{equation*}
 
 In this formula we are exploiting the search method, indeed we do not need to constrain the X coordinates because the \textbf{first\_fail}
 approach do it for us. Furthermore, we decided to use the already sorted areas array for efficiency reasons, because the same size
@@ -314,6 +332,7 @@ presents will appear in near positions in that array, while they could appear in
 
 \input{results/cp_dup_sym_model.tex}
 
+\newpage
 \section{Duplicated Symmetry Rotation Model}
 The modularity of our model eassily achieves a new model that takes in account all the discussed properties of the problem
 \textit{(Symmetry, Rotation, Duplicated Presents)} at once, just by combining the constraints of all the precedent models.
@@ -322,21 +341,21 @@ search tree drastically decrease.
 
 \input{results/cp_dup_rot_sym_model.tex}
 
-
+\newpage
 \section{Global Constraints Model}
 For the study case, we choose to try to implement our constraints through the already defined MiniZinc global constraints:
 
 \begin{itemize}
     \item The \texttt{overlaps} predicate can well be substituted by the \texttt{diffn} global constraint.
             Furthermore, the latter can work directly on arrays so the new constraint will be just one line of code:
-    \item[] $diffn(Coord_x, Coord_y, Dimension_x, Dimension_y)$
+    \item[] \verb|diffn(Coord_X, Coord_Y, Dimension_X, Dimension_Y)|
     \item The \textit{fit row/col} constriants can be substituted by the \texttt{cumulative} global constraint:
-    \item[] Rows: $cumulative(Coord_x, Dimension_x, Dimension_y, Height)$
-    \item[] Cols: $cumulative(Coord_y, Dimension_y, Dimension_x, Width)$
+    \item[] Rows: \verb|cumulative(Coord_X, Dimension_X, Dimension_y, Height)|
+    \item[] Cols: \verb|cumulative(Coord_Y, Dimension_Y, Dimension_X, Width)|
     \item[] Unluckly this global constraint was thought for task scheduling problems, so the performance result are not so good at all.
     \item The Duplicated \textbf{Symmetry Breaking} constraint can also be replaced by the \texttt{lexlesseq} global constraint:
-    \item[] $lexlesseq(Sorted\_Areas\_Coord_y, Coord_y)$
-    \item[] With $Sorted\_Areas\_Coord_y$ is the array of $Coord_y$ accessed with the indexes of the $Sorted\_Areas\_Indexes$ array.   
+    \item[] \verb|lexlesseq(Sorted_Areas_Coord_Y, Coord_Y)|
+    \item[] With \verb|Sorted_Areas_Coord_Y| is the array of $Coord_y$ accessed with the indexes of the $Sorted\_Areas\_Indexes$ array.   
 \end{itemize}
 
 At the end, we choosed to stuck with our implementation because it was well optimized for this kind of problem, and results to be more
@@ -345,6 +364,7 @@ efficient in terms of time, during the resolution of big size problems.
 \input{results/cp_base_global_model.tex}
 \input{results/cp_rot_global_model.tex}
 
+\newpage
 \section{Remarks and Results}
 As MiniZinc is an high level interface for many solver, we tryied different solver configurations in order to understand which one performs better
 in our problem. The standard \texttt{Geocode} solver resulted well suitable for any given instance, but we found out that the best solver, in particular

@@ -1,9 +1,17 @@
 \begin{center}
-    \begin{tabular}{|c|c|c|c|c|}
-        \hline
-        \multicolumn{5}{|c|}{\textbf{Global Results}} \\
-        \hline
-        \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
-        \hline
-    \end{tabular}
+    \begin{adjustwidth}{-2.5cm}{}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \multicolumn{5}{|c|}{\textbf{Global Results}} \\
+            \hline
+            \textbf{Model} & \textbf{Speed} & \textbf{Complexity} & \textbf{Strengths} & \textbf{Weaknesses} \\
+            \hline
+            Base Model & \vhighval & \ivlowval & \makecell{Very simple and\\ fast model} & \makecell{Does not exploit symmetries and\\does not allow rotations} \\ \hline
+            Symmetry Model & \highval & \ilowval & Symmetries & Exploits Symmetry Breaking \\ \hline
+            Rotation Model & \lowval & \imedval & Dimensions Proxy & \makecell{Huge search space\\\textit{(new dimension)}} \\ \hline
+            \makecell{Rotation Symmetry\\Model} & \vlowval & \imedval & \makecell{Symmetries with\\Rotations} & \makecell{Huge search space} \\ \hline
+            \makecell{Duplicated Symmetry\\Model} & \medval & \imedval & Same sized presents & \makecell{Big quantity of constraints} \\ \hline
+            \makecell{Duplicated Symmetry\\Rotation Model} & \vlowval & \ihighval & \makecell{Symmetries with\\Rotations and same\\sized presents} & \makecell{Huge quantity of constraints\\ and huge search spae} \\ \hline
+        \end{tabular}
+    \end{adjustwidth}
 \end{center}

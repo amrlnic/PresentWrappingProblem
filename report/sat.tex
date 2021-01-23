@@ -43,6 +43,7 @@ Indeed, we loose all the variables of the precedent model, and we use a new tens
     \end{adjustwidth}
 \end{center}
 
+\newpage
 The $Paper$ tensor has two dimensions for indicating the present position and one dimension indicating the present index. In this way
 we know that the i-th present will occupy the cell in the coordinates x, y if the boolean value of the $tensor[x, y, i]$ is true.
 
@@ -64,11 +65,12 @@ to carry out the solution of the problem.
         \item[] Given the two rectangles of two different presents, we can check if they have
             at least one part in common, just by checking if the tensor at position (x, y)
             holds in two different presents i and j. The \textit{overlaps} predicate is defined as:
-        \item[] \begin{equation*}\begin{multlined}
-            overlaps(Present_1, Present_2) \leftrightarrow \\
+        \begin{adjustwidth}{-2.5cm}{}\begin{equation*}
+            overlaps(Present_1, Present_2) \leftrightarrow
             \bigvee_{x, y \in Paper}(Paper[x, y, Present_1] \wedge Paper[x, y, Present_2])
-        \end{multlined}\end{equation*}
+        \end{equation*}\end{adjustwidth}
     \end{itemize}
+    \newpage
     \item \textbf{\textit{The presents must have and occupy the correct dimension:}}
     \begin{itemize}
         \item[] This was one of the hardes constrain to develop. We have to force the tensor to have the right
@@ -80,9 +82,9 @@ to carry out the solution of the problem.
                 Once we have all the formulas for all the possible initial position of the present in the paper sheet,
                 we concatenate them with an Or series into a \textit{Disjunctive Normal Formula}.
                 Let's define the following predicate, where $p$ is the index of the current present:
-        \item[] \begin{equation*}\begin{multlined}
-            correct\_dimension(p, dx, dy) \leftrightarrow \\
-            \bigvee_{
+        \begin{adjustwidth}{-2.0cm}{}\begin{equation*}\begin{split}
+            &correct\_dimension(p, dx, dy) \leftrightarrow \\
+            &\eqindent \bigvee_{
                 \substack{
                     x_0 \in [1, Width - dx]\\
                     y_0 \in [1, Height - dy]
@@ -101,7 +103,7 @@ to carry out the solution of the problem.
                     y \in [1, y_0] \cup [y_0 + dy + 1, Height]
                 }
              } \neg Paper[x, y, p]) 
-        \end{multlined}\end{equation*}
+        \end{split}\end{equation*}\end{adjustwidth}
         \item[] So we end up with the full constrain:\\
         \begin{equation*} \bigwedge_{p \in [1, Presents]} correct\_dimension(p, Dimension_x[p], Dimension_y[p]) \end{equation*}  
     \end{itemize}
@@ -116,57 +118,60 @@ to carry out the solution of the problem.
                 }
             } \bigvee_{p \in [1, Presents]} Paper[x, y, p]
         \end{equation*}
-    \end{itemize} 
+    \end{itemize}
+    \newpage
     \item[] \textbf{Additional Constraints}
     \item[] These constraint are not essential to solve the general formulation of this problem,
         but they results helpful as they restrict the search space in the given instances.
         The underlying assumption is that the instance contains the right amount of presents such
         that the area of the Paper Sheet is completely used.
-    \item \textbf{\textit{}}
     \item \textbf{\textit{The presents must fill the row (column) dimension:}}
         \begin{itemize}
             \item[] We want to use each row \textit{(or column)} such that we use all of the available area of the paper.
             \item[] Drawing a vertical \textit{(horizontal)} we check that at least one present holds in the tensor in the line coordinates:
             \item[] Rows: \begin{equation*}\bigvee_{y \in [1, Height]} \bigwedge_{x \in [1, Width]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
-            \item[] Cols: \begin{equation*}\bigvee_{x \in [1, Width]} \bigwedge_{y \in [1, Height]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
+            \item[] Columns: \begin{equation*}\bigvee_{x \in [1, Width]} \bigwedge_{y \in [1, Height]} \bigvee_{p \in [1, Presents]} Paper[x, y, p]\end{equation*}
         \end{itemize}
 \end{itemize}
 
 \input{results/sat_base_model.tex}
 
+\newpage
 \section{Rotation Model}
-As for \textbf{CP} and \textbf{SMT}, we just need another variable that keeps track of the rotation of each presnt in the paper sheet:
-
-In this case, we do not need to use a proxy to gather the correct dimension, we just check the correct dimension in two different ways: the normal or the rotated one.
-Like this, we can place each present in the normal \textit{OR} the rotated way and this is the resulting constrain: 
-\begin{equation*}\begin{multlined}
-    \bigwedge_{p \in [1, Presents]} (\\
-        correct\_dimension(p, Dimension_x[p], Dimension_y[p]) \vee\\
-        correct\_dimension(p, Dimension_y[p], Dimension_x[p]) \\
+As for \textbf{CP} and \textbf{SMT}, we just need another variable that keeps track of the rotation of each presnt in the paper sheet.
+In this case, we do not need to use a proxy to gather the correct dimension, we just check the correct dimension in two different ways,
+the normal \textit{OR} the rotated one, resulting with the constraint: 
+$
+    \bigwedge_{p \in [1, Presents]} (
+    \begin{matrix}
+        correct\_dimension(p, Dimension_x[p], Dimension_y[p]) & \vee \\
+        correct\_dimension(p, Dimension_y[p], Dimension_x[p]) &
+    \end{matrix}
     )
-\end{multlined}\end{equation*}  
-
-As we can see, by switching the two dimension, we can simply rotate the present.
+$
 
 \input{results/sat_rot_model.tex}
 
+\newpage
 \section{On the hardness of SAT modelling}
 There are just a few of the implemented model because we wanted to devolop them just by using the Popositional Logic predicates, without recurring with Arithmetics
 and Numerical calculus. We strugled to achieve the implementation of new models, but we have been discouraged by the loss of performance in the \textbf{SMT Symmetry Breaking} models,
 so we decided to try to improve as best as possible the basical models.\\
-Another weak point for the \textbf{SAT} is that we can't write a general purpose program in \textbf{SMT2Lib} standard. Indeed, to achieve such a generalization, we need to use
-numerical calculus, not completely available in the \textbf{Propositional Logic}.\\
+
+A weak point for the \textbf{SAT} is that we did not achieved to write a general purpose program in \textbf{SMT-Lib} standard. Indeed, to achieve such a generalization, we need to use
+numerical calculus and logical quantifiers, not completely available in \textbf{Propositional Logic}.\\
 
 Another hard point for the \textbf{SAT} modelling was building up the problem. Indeed, we generate a problem building incremental constraints that grows up exponentially with the size of
 the paper sheet, the number of presents and their size, since the \textbf{\textit{``Correct Dimension"}} constraint slide a present over the whole paper sheet. For this reason, it could happen
 that the problem construction takes more time then its resolution. The construction process takes in average from 3 to 15 minutes, but for tiny or small instances the resolution time can be lesser
 than one minute. At the end of day, this can also be acceptable for big instances, where the resolution time is greater than a minute
-\textit{(The given times are measured on the same machine, trying to respect the same conditions)}.
+\textit{(The given times are measured on the same machine, trying to respect the same conditions)}.\\
 
 We should also take in account that \texttt{Z3} is still in development and has some unexpected behaviours, especially when it boil down to a time matter.
 As many many issues come up, it seems that just by renaming variables the time performance of the solver is influenced \cite{z3issues}.
 Our decision was to show a view of the resolution times as like as these issues do not exist, so we intended them as model dependent.
 
+\newpage
 \section{Results}
 During the resolution of the statistics we tried different \textbf{Resolution Strategy} for the Z3 Solver:
 \begin{itemize}
