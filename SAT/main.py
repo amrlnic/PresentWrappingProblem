@@ -1,5 +1,6 @@
 def configuration(parser):
-    parser.add_argument('--model', default='base_model', help='The model to be used in order to build the problem for the solver')
+    models = ('base_model', 'rot_model')
+    parser.add_argument('--model', default='base_model', choices=models, help='The model to be used in order to build the problem for the solver')
     parser.add_argument('--verbose', default=None, type=int, help='The level of verbosity of z3 solver')
     parser.add_argument('--simple', nargs='?', default=False, const=True, help='True=Uses the z3 Simple Solver, False=Uses the standard z3 Solver')
 

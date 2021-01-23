@@ -1,8 +1,6 @@
-from z3.z3 import is_true, solve
-
-
 def configuration(parser):
-    parser.add_argument('--model', default='base_model', help='The model to be used in order to build the problem for the solver')
+    models = ('base_model', 'sym_model', 'rot_model', 'rot_sym_model', 'dup_sym_model', 'dup_sym_rot_model')
+    parser.add_argument('--model', default='base_model', choices=models, help='The model to be used in order to build the problem for the solver')
     parser.add_argument('--smt-lib', nargs='?', default=False, const=True, help='True=Uses the smt2-lib standard language, False=Uses python api of z3')
     parser.add_argument('--verbose', default=None, type=int, help='The level of verbosity of z3 solver')
     parser.add_argument('--simple', nargs='?', default=False, const=True, help='True=Uses the z3 Simple Solver, False=Uses the standard z3 Solver')

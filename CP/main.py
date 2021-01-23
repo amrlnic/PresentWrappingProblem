@@ -2,7 +2,8 @@ from types import coroutine
 
 
 def configuration(parser):
-    parser.add_argument('--model', default='dup_rot_sym_model', help='The model to be used in order to build the problem for the solver')
+    models = ('base_model', 'sym_model', 'rot_model', 'rot_sym_model', 'dup_sym_model', 'dup_sym_rot_model', 'base_global_model', 'rot_global_model')
+    parser.add_argument('--model', default='dup_rot_sym_model', choices=models, help='The model to be used in order to build the problem for the solver')
     parser.add_argument('--solver', default='chuffed', help='The solver used to carry out the problem')
     parser.add_argument('--optimization', type=int, default=1, help='The optimization level of MiniZinc compiler')
     parser.add_argument('--no-free-search', nargs='?', default=False, const=True, help='Disallow the solver to use Free Search mode')
