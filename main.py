@@ -77,12 +77,28 @@ if __name__ == '__main__':
     try: instances = [ read_instance_from_file(file) for file in instance_files ]
     except Exception as e: print(f'ERROR: Error while parsing the input files'), print(e), exit(1)
 
+    def make_callback(text):
+        
+        return lambda: print(text, end='\r')
+
     # try:
     for instance, output, image_output in zip(instances, output_files, images_files):
-        print(f'Solving instance: {instance}', end='\r')
-        start_time = time.time()
-        resolver(instance, all_solutions=args.all_solutions, time_limit=args.time_limit, **configuration)
-        print(f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {time.time() - start_time:0.3f}s')
+        print(f'Preparing instance: {instance}', end='\r')
+        exec_time = time.time()
+        
+        prepare_time = exec_time
+        def on_prepared():
+            global prepare_time
+            prepare_time = time.time() - exec_time
+            print(f'Solving instance: {instance} # Preparing Time: {prepare_time:0.3f}s', end='\r')
+
+        resolver(instance, all_solutions=args.all_solutions, time_limit=args.time_limit, on_prepared=on_prepared, **configuration)
+        exec_time = time.time() - exec_time
+
+        to_print = f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {exec_time:0.3f}s '
+        to_print += f'# Preparing Time: {prepare_time:0.3f}s # Execution Time: {exec_time - prepare_time:0.3f}s'
+        print(to_print)
+        
         if args.print_stat and instance.statistics and len(instance.statistics):
             stats = instance.statistics[0]
             if args.method == 'CP':
@@ -91,6 +107,9 @@ if __name__ == '__main__':
                     'nodes': stats['nodes'],
                     'propagations': stats['propagations'],
                     'memory': stats.get('peakMem', 0.0),
+                    'preaparation': prepare_time,
+                    'execution': exec_time - prepare_time,
+                    'total': exec_time
                 })
             else:
                 print({
@@ -98,6 +117,9 @@ if __name__ == '__main__':
                     'nodes': stats['decisions'] if 'decisions' in stats else stats['sat decisions'],
                     'propagations': stats['propagations'] if 'propagations' in stats else (stats['sat propagations 2ary'] + stats['sat propagations nary']),
                     'memory': stats['max memory'],
+                    'preaparation': prepare_time,
+                    'execution': exec_time - prepare_time,
+                    'total': exec_time
                 })
         write_instance_to_file(instance, output, all_solutions=args.all_solutions)
         if not args.no_images: plot_instance_to_file(instance, image_output, all_solutions=args.all_solutions)

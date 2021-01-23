@@ -1,6 +1,3 @@
-from types import coroutine
-
-
 def configuration(parser):
     models = ('base_model', 'sym_model', 'rot_model', 'rot_sym_model', 'dup_sym_model', 'dup_sym_rot_model', 'base_global_model', 'rot_global_model')
     parser.add_argument('--model', default='dup_rot_sym_model', choices=models, help='The model to be used in order to build the problem for the solver')
@@ -26,7 +23,7 @@ def resolve(coroutine):
             loop.close()
 
 
-def main(instance, all_solutions=False, model='dup_rot_sym_model', solver='chuffed', optimization=1, no_free_search=False, random_seed=42, time_limit=None):
+def main(instance, all_solutions=False, model='dup_rot_sym_model', solver='chuffed', optimization=1, no_free_search=False, random_seed=42, time_limit=None, on_prepared=None):
     import minizinc as mz
 
     model = mz.Model(f'CP/src/models/{model}.mzn')
@@ -49,6 +46,7 @@ def main(instance, all_solutions=False, model='dup_rot_sym_model', solver='chuff
             ), timeout=float(time_limit) / 1000 if time_limit is not None else None)
         except asyncio.TimeoutError: pass
     
+    if callable(on_prepared): on_prepared()
     results = resolve(resolve_coroutine())
     
     if results is not None:

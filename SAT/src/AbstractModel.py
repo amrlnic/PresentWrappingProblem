@@ -1,7 +1,11 @@
 class AbstractModel:
-    def __init__(self, instance, simple=False):
-        import z3
-        self.backend = z3
+    def __init__(self, instance, simple=False, backend=None):
+        self.backend = backend
+        if self.backend is None:
+            import z3
+            self.backend = z3
+
+
         self.instance = instance
 
         self.presents = len(instance.presents)

@@ -163,9 +163,15 @@ numerical calculus and logical quantifiers, not completely available in \textbf{
 
 Another hard point for the \textbf{SAT} modelling was building up the problem. Indeed, we generate a problem building incremental constraints that grows up exponentially with the size of
 the paper sheet, the number of presents and their size, since the \textbf{\textit{``Correct Dimension"}} constraint slide a present over the whole paper sheet. For this reason, it could happen
-that the problem construction takes more time then its resolution. The construction process takes in average from 3 to 15 minutes, but for tiny or small instances the resolution time can be lesser
-than one minute. At the end of day, this can also be acceptable for big instances, where the resolution time is greater than a minute
-\textit{(The given times are measured on the same machine, trying to respect the same conditions)}.\\
+that the problem construction takes more time then its resolution. The construction process takes in average from $3$ to $45$ minutes, but for tiny or small instances the resolution time can be lesser
+than one minute. At the end of day, this can also be acceptable for big instances, where the resolution time is greater than a minute.
+\\
+As a solution for this problem, we develop a wrapper for the \texttt{Z3 Python API} that does not build the \texttt{Expression Tree} each time a call to the \texttt{API} happens, but it concatenate a simpler
+\texttt{Expression Tree} from the operations, directly compiling it into \textbf{SMT Standard} syntax. After the full compilation, the program is loaded then to the solver.
+In such a way the average construction time is reduced to less then $3$ minutes, even in the worst case of the \textbf{Rotation Model}.
+The wrapper just emulates the same behaviour of the \texttt{API} used in this project, exposing the same interface as Z3, but instead of computing the tree in memory, it write the expressions in
+a temporary file and then load that program into the solver. \\
+\textit{\textbf{Note:} All the given times are measured on the same machine, trying to respect the same running conditions}\\
 
 We should also take in account that \texttt{Z3} is still in development and has some unexpected behaviours, especially when it boil down to a time matter.
 As many many issues come up, it seems that just by renaming variables the time performance of the solver is influenced \cite{z3issues}.
