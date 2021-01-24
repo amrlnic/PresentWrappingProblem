@@ -534,5 +534,12 @@ SAT;rot_model;29x29;true;23.027;39;44601;1507.51
 SAT;rot_model;30x30;true;-1;-;-;-
 SAT;rot_model;31x31;true;16.009;30;39949;1281.11
 SAT;rot_model;32x32;true;27.989;50;59851;2064.13
+SAT;rot_model;33x33;true;-1;-;-;-
 SAT;rot_model;34x34;true;4326.645;1398031;437853218;5015.59
+SAT;rot_model;35x35;true;-1;-;-;-
+SAT;rot_model;36x36;true;66.076;6135;145383;2943.05
+SAT;rot_model;37x37;true;-1;-;-;-
+SAT;rot_model;38x38;true;4304.47;721826;193355445;8176.07
+SAT;rot_model;39x39;true;116.145;50;104234;5464.31
+SAT;rot_model;40x40;true;-1;-;-;-
 SAT;rot_model;rotation_test;true;0.014;34;298;2.85
