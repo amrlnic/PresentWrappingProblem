@@ -34,7 +34,16 @@ methods = (
 statistics = ('method', 'model', 'instance', 'sat', 'time', 'nodes', 'propagations', 'memory')
 instances = tuple([ f'{i}x{i}' for i in range(8, 41) ] + [ 'rotation_test' ])
 
+methods_names = {
+    'rot': 'rotation',
+    'sym': 'symmetry',
+    'dup': 'duplicated'
+}
+
 if len(sys.argv) > 1:
+    def make_name(method, model):
+        return f'Results - {method.upper()} - {str.join(" ", (w[0].upper() + w[1:] for w in (methods_names.get(k, k) for k in model.split("_"))))}'
+
     def make_table(method, model):
         method, model = method.lower(), model.lower()
         method_ref = find(methods, lambda m: m[0].lower() == method)
@@ -44,11 +53,6 @@ if len(sys.argv) > 1:
         print(f'=== RUNNING: {method.upper()} - {model} ===\n')
 
         stats = [ s for s in extract(target_file) if s['method'].lower() == method and s['model'] == model ]
-
-        special_name = ''
-        if 'global' in model:
-            if 'base' in model: special_name = ' Base Model'
-            else: special_name = ' Rotation Model'
         
         with_mem = method != 'cp'
         text_bf_mem = '& \\textbf{Memory \\textit{[KB]}} ' if with_mem else ''
@@ -56,7 +60,7 @@ if len(sys.argv) > 1:
 \\begin{{center}}
     \\begin{{tabular}}{{|c|c|r|r|{'r|' if with_mem else ''}}}
         \\hline
-        \\multicolumn{{{5 if with_mem else 4}}}{{|c|}}{{\\textbf{{Results{special_name}}}}} \\\\
+        \\multicolumn{{{5 if with_mem else 4}}}{{|c|}}{{\\textbf{{{make_name(method, model)}}}}} \\\\
         \\hline
         \\textbf{{Instance}} & \\textbf{{Time}} & \\textbf{{Nodes}} & \\textbf{{Propagations}} {text_bf_mem}\\\\
         

@@ -37,8 +37,9 @@ def play_beep():
 def main():
     import os
     import tqdm
-    import multiprocessing 
     import argparse
+    import datetime
+    import multiprocessing 
     from CP.main import main as CP
     from SAT.main import main as SAT
     from SMT.main import main as SMT
@@ -82,7 +83,8 @@ def main():
     process_num = args.processes or multiprocessing.cpu_count()
     print(f'Resolving {len(trials)} statistics with {process_num} processes')
     
-    solving = [ (n, m, i) for n, _, m, i, _ in trials[:process_num] ]
+    now = datetime.datetime.now()
+    solving = [ (n, m, i, f'{now.hour}:{now.minute}:{now.second}') for n, _, m, i, _ in trials[:process_num] ]
     index = process_num
 
     def make_desc(): return 'Solving: [' + str.join(', ', [ str.join('.', s) for s in solving ]) + ']'
@@ -92,10 +94,12 @@ def main():
             with open(target_file, 'a') as csv_output: csv_output.write(f'{first}{method_name};{model};{instance_name};{str.join(";", [ result[s] for s in stats ])}\n')
             first = ''
 
-            solving.remove((method_name, model, instance_name))
+            q = [ x for x in solving if x[:3] == (method_name, model, instance_name) ][0] 
+            solving.remove(q)
             if index < len(trials):
                 n, _, m, i, _ = trials[index]
-                solving.append((n, m, i))
+                now = datetime.datetime.now()
+                solving.append((n, m, i, f'{now.hour:02d}:{now.minute:02d}:{now.second:02d}'))
                 index += 1
 
             bar.set_description_str(make_desc())

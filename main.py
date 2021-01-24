@@ -5,6 +5,7 @@ if __name__ == '__main__':
     import os
     import re
     import time
+    import datetime
     import argparse
     import importlib
     from instance import read_instance_from_file, write_instance_to_file, plot_instance_to_file
@@ -77,26 +78,26 @@ if __name__ == '__main__':
     try: instances = [ read_instance_from_file(file) for file in instance_files ]
     except Exception as e: print(f'ERROR: Error while parsing the input files'), print(e), exit(1)
 
-    def make_callback(text):
-        
-        return lambda: print(text, end='\r')
+    def get_time():
+        now = datetime.datetime.now()
+        return f'{now.hour:02d}:{now.minute:02d}:{now.second:02d}'
 
     # try:
     for instance, output, image_output in zip(instances, output_files, images_files):
-        print(f'Preparing instance: {instance}', end='\r')
+        print(f'Preparing instance: {instance} @ {get_time()}', end='\r')
         exec_time = time.time()
         
         prepare_time = exec_time
         def on_prepared():
             global prepare_time
             prepare_time = time.time() - exec_time
-            print(f'Solving instance: {instance} # Preparing Time: {prepare_time:0.3f}s', end='\r')
+            print(f'Solving instance: {instance} # Preparing Time: {prepare_time:0.3f}s @ {get_time()}', end='\r')
 
         resolver(instance, all_solutions=args.all_solutions, time_limit=args.time_limit, on_prepared=on_prepared, **configuration)
         exec_time = time.time() - exec_time
 
         to_print = f'{instance} --> {len(instance.solutions or [])} solution{("s" if len(instance.solutions or []) != 1 else "")} in {exec_time:0.3f}s '
-        to_print += f'# Preparing Time: {prepare_time:0.3f}s # Execution Time: {exec_time - prepare_time:0.3f}s'
+        to_print += f'# Preparing Time: {prepare_time:0.3f}s # Execution Time: {exec_time - prepare_time:0.3f}s @ {get_time()}'
         print(to_print)
         
         if args.print_stat and instance.statistics and len(instance.statistics):
