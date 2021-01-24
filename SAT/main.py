@@ -11,7 +11,7 @@ def main(instance, all_solutions=False, model='base_model', time_limit=None, bac
     
     if backend == 'fast':
         import z3_fast_backend
-        backend = z3_fast_backend.create(True)
+        backend = z3_fast_backend.create(False)
     else:
         import z3
         backend = z3
