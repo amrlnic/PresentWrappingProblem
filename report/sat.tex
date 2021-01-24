@@ -1,5 +1,5 @@
 \chapter{SAT}
-The \textbf{Boolean Satisfiability} can be exploited in order to prove that the given ammount of presents, with the given dimensions can
+The \textbf{Boolean Satisfiability} can be exploited in order to prove that the given amount of presents, with the given dimensions can
 fit in certain positions into the paper sheet. As far we have not numerical variables anymore we must reimplement from scratch the whole
 models definition. We borrowed some concepts from the \textbf{CP} and \textbf{SMT} methods, but we had to port them into a new boolean logic.
 
@@ -73,9 +73,9 @@ to carry out the solution of the problem.
     \newpage
     \item \textbf{\textit{The presents must have and occupy the correct dimension:}}
     \begin{itemize}
-        \item[] This was one of the hardes constrain to develop. We have to force the tensor to have the right
-            ammount of true values in the correct place, for each present at a gien coordinate. The idea is
-            that given a certain coordinate, we force the tensor to obbey a certain \textit{Disjunctive Normal Formula}.
+        \item[] This was one of the hardest constrain to develop. We have to force the tensor to have the right
+            amount of true values in the correct place, for each present at a given coordinate. The idea is
+            that given a certain coordinate, we force the tensor to obey a certain \textit{Disjunctive Normal Formula}.
         \item[] For each present, we fix a tuple of initial coordinates $(x_0, y_0)$ and we force the tensor to hold at 
                 all the subsequent $Width \times Height$ coordinates, and not to hold the rest.
                 Then we translate the initial coordinates and repeat the extraction of the formula.
@@ -138,9 +138,9 @@ to carry out the solution of the problem.
 
 \newpage
 \section{Rotation Model}
-As for \textbf{CP} and \textbf{SMT}, we just need another variable that keeps track of the rotation of each presnt in the paper sheet.
+As for \textbf{CP} and \textbf{SMT}, we just need another variable that keeps track of the rotation of each present in the paper sheet.
 In this case, we do not need to use a proxy to gather the correct dimension, we just check the correct dimension in two different ways,
-the normal \textit{OR} the rotated one, resulting with the constraint: 
+the normal \textit{OR} the rotated one, resulting with the constraint:
 $
     \bigwedge_{p \in [1, Presents]} (
     \begin{matrix}
@@ -154,9 +154,9 @@ $
 
 \newpage
 \section{On the hardness of SAT modelling}
-There are just a few of the implemented model because we wanted to devolop them just by using the Popositional Logic predicates, without recurring with Arithmetics
-and Numerical calculus. We strugled to achieve the implementation of new models, but we have been discouraged by the loss of performance in the \textbf{SMT Symmetry Breaking} models,
-so we decided to try to improve as best as possible the basical models.\\
+There are just a few of the implemented model because we wanted to develop them just by using the Propositional Logic predicates, without recurring with Arithmetics
+and Numerical calculus. We struggled to achieve the implementation of new models, but we have been discouraged by the loss of performance in the \textbf{SMT Symmetry Breaking} models,
+so we decided to try to improve as best as possible the basic models.\\
 
 A weak point for the \textbf{SAT} is that we did not achieved to write a general purpose program in \textbf{SMT-Lib} standard. Indeed, to achieve such a generalization, we need to use
 numerical calculus and logical quantifiers, not completely available in \textbf{Propositional Logic}.\\
