@@ -27,6 +27,43 @@
 | SAT  | `python main.py -m sat` | Solve all the inputs with SAT, command used to generate outputs | 
 | SMT  | `python main.py -m smt` | Solve all the inputs with SMT, command used to generate outputs | 
 
+### **How to read the Input/Output:**
+Input Format:
+```
+W H
+N
+
+DIM_X[i] DIM_Y[i]
+```
+
+
+Input Example:
+```
+4 4
+4
+1 4
+4 1
+2 2
+2 2
+```
+Output Format:
+```
+W H
+N
+
+DIM_X[i] DIM_Y[i] X[i] Y[i] (ROTATED) if ROTATED[i]
+```
+
+Output Example:
+```
+4 4
+4
+1 4 4 1
+4 1 3 1 (ROTATED)
+2 2 1 3
+2 2 1 1
+```
+
 # Structure
 ## Main
 The main program is an abstract interface for each resolution method available. The program will invoke the single `{METHOD}/main.py` subroutine of the choosen method, passing the right parameters and instances to it. Each subroutine can also take its command line arguments too. As Python works in modules, is not possible to launch any of the subroutines singularly, you need to use this interface. 
